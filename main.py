@@ -12,7 +12,6 @@ for i in cmd:
         if token != "":
             items.append(token)
             token = ""
-
         if (i == "+" or i == "-"):
             items.append(i)
 
