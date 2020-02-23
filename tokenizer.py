@@ -25,7 +25,7 @@ class Tokenizer:
             digit = ""
             i = self.position
             while i < lenOrigin and self.origin[i].isdigit():
-                digit += self.origin[self.position]
+                digit += self.origin[i]
                 i += 1
             self.actual = Token(digit, "INT")
 
