@@ -1,4 +1,4 @@
-from utils import Token
+from tokens import Token
 
 
 class Tokenizer:
