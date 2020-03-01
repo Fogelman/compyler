@@ -11,19 +11,19 @@ class Parser:
         if tokens.actual.type == "INT":
             result = int(tokens.actual.value)
             tokens.selectNext()
-            return result
         elif(tokens.actual.type == "OPEN"):
             result = Parser.parseExpression()
             if(tokens.actual.type != "CLOSE"):
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
-            return result
         elif(tokens.actual.type == "PLUS"):
-            return Parser.parseFactor()
+            result = Parser.parseFactor()
         elif(tokens.actual.type == "MINUS"):
-            return -Parser.parseFactor()
+            result = -Parser.parseFactor()
         else:
             raise Exception("[-] unexpected token.")
+
+        return result
 
     @staticmethod
     def parseTerm():
