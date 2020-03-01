@@ -1,3 +1,5 @@
+import os
+import json
 from tokens import Token
 
 
@@ -6,6 +8,10 @@ class Tokenizer:
         self.origin = origin
         self.position = position
         self.actual = actual
+
+        path = os.path.join(os.getcwd(), "config.json")
+        with open(path, "r") as file:
+            self.tokens = json.load(file)["tokens"]
 
     def selectNext(self):
         lenOrigin = len(self.origin)
@@ -17,14 +23,6 @@ class Tokenizer:
 
         if self.position >= lenOrigin:
             self.actual = Token("", "EOF")
-        elif self.origin[self.position] == "+":
-            self.actual = Token("+", "PLUS")
-        elif self.origin[self.position] == "-":
-            self.actual = Token("-", "MINUS")
-        elif self.origin[self.position] == "/":
-            self.actual = Token("/", "DIVIDE")
-        elif self.origin[self.position] == "*":
-            self.actual = Token("*", "MULTIPLY")
         elif self.origin[self.position].isdigit():
             digit = ""
             i = self.position
@@ -32,6 +30,9 @@ class Tokenizer:
                 digit += self.origin[i]
                 i += 1
             self.actual = Token(digit, "INT")
+        elif self.origin[self.position] in self.tokens:
+            actual = self.origin[self.position]
+            self.actual = Token(actual, self.tokens[actual])
 
         else:
             raise Exception(
