@@ -43,8 +43,7 @@ class Parser:
                 result += Parser.parseTerm()
             elif tokens.actual.type == "MINUS":
                 result -= Parser.parseTerm()
-            else:
-                raise Exception("[-] unexpected token.")
+
         return result
 
     @staticmethod
