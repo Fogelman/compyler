@@ -21,6 +21,10 @@ class Tokenizer:
             self.actual = Token("+", "PLUS")
         elif self.origin[self.position] == "-":
             self.actual = Token("-", "MINUS")
+        elif self.origin[self.position] == "/":
+            self.actual = Token("/", "DIVIDE")
+        elif self.origin[self.position] == "*":
+            self.actual = Token("*", "MULTIPLY")
         elif self.origin[self.position].isdigit():
             digit = ""
             i = self.position
@@ -31,6 +35,6 @@ class Tokenizer:
 
         else:
             raise Exception(
-                f"Could not decode character at position {self.position}")
+                f"[-] could not decode character at position {self.position}")
 
         self.position += len(self.actual.value)
