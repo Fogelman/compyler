@@ -1,0 +1,10 @@
+{
+    "tokens": {
+        "+": "PLUS",
+        "-": "MINUS",
+        "/": "DIVIDE",
+        "*": "MULTIPLY",
+        "(": "OPEN",
+        ")": "CLOSE"
+    }
+}

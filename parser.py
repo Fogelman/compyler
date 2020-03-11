@@ -5,33 +5,37 @@ class Parser:
     tokens = None
 
     @staticmethod
-    def parseTerm():
+    def parseFactor():
         tokens = Parser.tokens
         tokens.selectNext()
-        result = 0
-
-        if(tokens.actual.type == "INT"):
+        if tokens.actual.type == "INT":
             result = int(tokens.actual.value)
             tokens.selectNext()
-
-            while tokens.actual.type in ["DIVIDE", "MULTIPLY"]:
-                if tokens.actual.type == "MULTIPLY":
-                    tokens.selectNext()
-                    if tokens.actual.type == "INT":
-                        result *= int(tokens.actual.value)
-                    else:
-                        raise Exception("[-] unexpected token.")
-                elif tokens.actual.type == "DIVIDE":
-                    tokens.selectNext()
-                    if tokens.actual.type == "INT":
-                        result /= int(tokens.actual.value)
-                    else:
-                        raise Exception("[-] unexpected token.")
-                tokens.selectNext()
-            return result
+        elif(tokens.actual.type == "OPEN"):
+            result = Parser.parseExpression()
+            if(tokens.actual.type != "CLOSE"):
+                raise Exception("[-] unexpected token.")
+            tokens.selectNext()
+        elif(tokens.actual.type == "PLUS"):
+            result = Parser.parseFactor()
+        elif(tokens.actual.type == "MINUS"):
+            result = -Parser.parseFactor()
         else:
-            raise Exception(
-                "[-] unexpected token.")
+            raise Exception("[-] unexpected token.")
+
+        return result
+
+    @staticmethod
+    def parseTerm():
+        tokens = Parser.tokens
+        result = Parser.parseFactor()
+
+        while tokens.actual.type in ["DIVIDE", "MULTIPLY"]:
+            if tokens.actual.type == "MULTIPLY":
+                result *= Parser.parseFactor()
+            elif tokens.actual.type == "DIVIDE":
+                result /= Parser.parseFactor()
+        return result
 
     @staticmethod
     def parseExpression():
@@ -43,7 +47,6 @@ class Parser:
                 result += Parser.parseTerm()
             elif tokens.actual.type == "MINUS":
                 result -= Parser.parseTerm()
-
         return result
 
     @staticmethod
