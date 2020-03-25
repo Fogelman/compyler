@@ -4,17 +4,18 @@ from abc import ABC, abstractmethod
 
 class Node(ABC):
 
+    def __init__(self, value, children=None):
+        self.value = value
+        self.children = children
+        if children is None:
+            self.children = list()
+
     @abstractmethod
     def Evaluate(self):
         pass
 
 
 class BinOp(Node):
-    def __init__(self, value, children=None):
-        self.value = value
-        self.children = children
-        if children is None:
-            self.children = list()
 
     def Evaluate(self):
         if self.value == "PLUS":
@@ -28,11 +29,6 @@ class BinOp(Node):
 
 
 class UnOp(Node):
-    def __init__(self, value, children=None):
-        self.value = value
-        self.children = children
-        if children is None:
-            self.children = list()
 
     def Evaluate(self):
         if self.value == "PLUS":
@@ -42,22 +38,12 @@ class UnOp(Node):
 
 
 class IntVal(Node):
-    def __init__(self, value, children=None):
-        self.value = value
-        self.children = children
-        if children is None:
-            self.children = list()
 
     def Evaluate(self):
         return self.value
 
 
 class NoOp(Node):
-    def __init__(self, value, children=None):
-        self.value = value
-        self.children = children
-        if children is None:
-            self.children = list()
 
     def Evaluate(self):
         return
