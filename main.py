@@ -1,8 +1,14 @@
 import sys
+import os
 from compyler.parser import Parser
 from compyler.preprocessor import Preprocessor
 
-code = sys.argv[1]
+path = sys.argv[1]
+
+with open(os.path.abspath(path), "r") as file:
+    code = file.read()
+
 preprocessed = Preprocessor.run(code)
 parsed = Parser.run(preprocessed)
-print(parsed.Evaluate())
+evaluated = parsed.Evaluate()
+print(evaluated)

@@ -56,7 +56,6 @@ class Parser:
         Parser.tokens = Tokenizer(code)
         parsed = Parser.parseExpression()
         if Parser.tokens.actual.type != "EOF":
-            print(Parser.tokens.actual)
             raise Exception("[-] unexpected token")
 
         return parsed
