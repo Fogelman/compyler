@@ -1,7 +1,5 @@
-from tokenizer import Tokenizer
-from node import BinOp, UnOp, IntVal, NoOp
-
-IntVal(5)
+from compyler.tokenizer import Tokenizer
+from compyler.node import BinOp, UnOp, IntVal, NoOp
 
 
 class Parser:
@@ -46,12 +44,11 @@ class Parser:
     def parseExpression():
         tokens = Parser.tokens
         result = Parser.parseTerm()
-
         while tokens.actual.type in ["PLUS", "MINUS"]:
             if tokens.actual.type == "PLUS":
-                result = BinOp("PLUS", [result, Parser.parseFactor()])
+                result = BinOp("PLUS", [result, Parser.parseTerm()])
             elif tokens.actual.type == "MINUS":
-                result = BinOp("MINUS", [result, Parser.parseFactor()])
+                result = BinOp("MINUS", [result, Parser.parseTerm()])
         return result
 
     @staticmethod
@@ -59,6 +56,7 @@ class Parser:
         Parser.tokens = Tokenizer(code)
         parsed = Parser.parseExpression()
         if Parser.tokens.actual.type != "EOF":
+            print(Parser.tokens.actual)
             raise Exception("[-] unexpected token")
 
         return parsed
