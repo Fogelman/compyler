@@ -1,4 +1,7 @@
 from tokenizer import Tokenizer
+from node import BinOp, UnOp, IntVal, NoOp
+
+IntVal(5)
 
 
 class Parser:
@@ -8,8 +11,9 @@ class Parser:
     def parseFactor():
         tokens = Parser.tokens
         tokens.selectNext()
+        result = None
         if tokens.actual.type == "INT":
-            result = int(tokens.actual.value)
+            result = IntVal(int(tokens.actual.value))
             tokens.selectNext()
         elif(tokens.actual.type == "OPEN"):
             result = Parser.parseExpression()
@@ -17,9 +21,10 @@ class Parser:
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
         elif(tokens.actual.type == "PLUS"):
-            result = Parser.parseFactor()
+            result = UnOp("+", [Parser.parseFactor()])
         elif(tokens.actual.type == "MINUS"):
-            result = -Parser.parseFactor()
+            result = UnOp("-", [Parser.parseFactor()])
+
         else:
             raise Exception("[-] unexpected token.")
 
@@ -32,9 +37,9 @@ class Parser:
 
         while tokens.actual.type in ["DIVIDE", "MULTIPLY"]:
             if tokens.actual.type == "MULTIPLY":
-                result *= Parser.parseFactor()
+                result = BinOp("*", [result, Parser.parseFactor()])
             elif tokens.actual.type == "DIVIDE":
-                result /= Parser.parseFactor()
+                result = BinOp("/", [result, Parser.parseFactor()])
         return result
 
     @staticmethod
@@ -44,9 +49,9 @@ class Parser:
 
         while tokens.actual.type in ["PLUS", "MINUS"]:
             if tokens.actual.type == "PLUS":
-                result += Parser.parseTerm()
+                result = BinOp("+", [result, Parser.parseFactor()])
             elif tokens.actual.type == "MINUS":
-                result -= Parser.parseTerm()
+                result = BinOp("-", [result, Parser.parseFactor()])
         return result
 
     @staticmethod
@@ -55,4 +60,5 @@ class Parser:
         parsed = Parser.parseExpression()
         if Parser.tokens.actual.type != "EOF":
             raise Exception("[-] unexpected token")
+
         return parsed
