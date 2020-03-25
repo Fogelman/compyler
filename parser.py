@@ -21,9 +21,9 @@ class Parser:
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
         elif(tokens.actual.type == "PLUS"):
-            result = UnOp("+", [Parser.parseFactor()])
+            result = UnOp("PLUS", [Parser.parseFactor()])
         elif(tokens.actual.type == "MINUS"):
-            result = UnOp("-", [Parser.parseFactor()])
+            result = UnOp("MINUS", [Parser.parseFactor()])
 
         else:
             raise Exception("[-] unexpected token.")
@@ -37,9 +37,9 @@ class Parser:
 
         while tokens.actual.type in ["DIVIDE", "MULTIPLY"]:
             if tokens.actual.type == "MULTIPLY":
-                result = BinOp("*", [result, Parser.parseFactor()])
+                result = BinOp("MULTIPLY", [result, Parser.parseFactor()])
             elif tokens.actual.type == "DIVIDE":
-                result = BinOp("/", [result, Parser.parseFactor()])
+                result = BinOp("DIVIDE", [result, Parser.parseFactor()])
         return result
 
     @staticmethod
@@ -49,9 +49,9 @@ class Parser:
 
         while tokens.actual.type in ["PLUS", "MINUS"]:
             if tokens.actual.type == "PLUS":
-                result = BinOp("+", [result, Parser.parseFactor()])
+                result = BinOp("PLUS", [result, Parser.parseFactor()])
             elif tokens.actual.type == "MINUS":
-                result = BinOp("-", [result, Parser.parseFactor()])
+                result = BinOp("MINUS", [result, Parser.parseFactor()])
         return result
 
     @staticmethod

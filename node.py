@@ -17,13 +17,13 @@ class BinOp(Node):
             self.children = list()
 
     def Evaluate(self):
-        if self.value == "+":
+        if self.value == "PLUS":
             return self.children[0].Evaluate() + self.children[1].Evaluate()
-        elif self.value == "-":
+        elif self.value == "MINUS":
             return self.children[0].Evaluate() - self.children[1].Evaluate()
-        elif self.value == "/":
+        elif self.value == "DIVIDE":
             return self.children[0].Evaluate() // self.children[1].Evaluate()
-        elif self.value == "*":
+        elif self.value == "MULTIPLY":
             return self.children[0].Evaluate() * self.children[1].Evaluate()
 
 
@@ -35,9 +35,9 @@ class UnOp(Node):
             self.children = list()
 
     def Evaluate(self):
-        if self.value == "+":
+        if self.value == "PLUS":
             return self.children[0].Evaluate()
-        elif self.value == "-":
+        elif self.value == "MINUS":
             return -self.children[0].Evaluate()
 
 
