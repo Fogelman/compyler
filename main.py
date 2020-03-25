@@ -1,8 +1,8 @@
 import sys
-from parser import Parser
-from preprocessor import Preprocessor
+from compyler.parser import Parser
+from compyler.preprocessor import Preprocessor
 
 code = sys.argv[1]
 preprocessed = Preprocessor.run(code)
 parsed = Parser.run(preprocessed)
-print(int(parsed))
+print(parsed.Evaluate())

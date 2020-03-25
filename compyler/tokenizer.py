@@ -1,6 +1,16 @@
 import os
 import json
-from tokens import Token
+from compyler.token import Token
+
+
+tokens = {
+    "+": "PLUS",
+    "-": "MINUS",
+    "/": "DIVIDE",
+    "*": "MULTIPLY",
+    "(": "OPEN",
+    ")": "CLOSE"
+}
 
 
 class Tokenizer:
@@ -8,10 +18,6 @@ class Tokenizer:
         self.origin = origin
         self.position = position
         self.actual = actual
-
-        path = os.path.join(os.getcwd(), "config.json")
-        with open(path, "r") as file:
-            self.tokens = json.load(file)["tokens"]
 
     def selectNext(self):
         lenOrigin = len(self.origin)
@@ -30,10 +36,9 @@ class Tokenizer:
                 digit += self.origin[i]
                 i += 1
             self.actual = Token(digit, "INT")
-        elif self.origin[self.position] in self.tokens:
+        elif self.origin[self.position] in tokens:
             actual = self.origin[self.position]
-            self.actual = Token(actual, self.tokens[actual])
-
+            self.actual = Token(actual, tokens[actual])
         else:
             raise Exception(
                 f"[-] could not decode character at position {self.position}")
