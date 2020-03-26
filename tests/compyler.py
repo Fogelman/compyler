@@ -1,6 +1,5 @@
 import pytest
-from compyler.parser import Parser
-from compyler.preprocessor import Preprocessor
+from compyler import _run
 
 tests = [
     ("(1+/*A */1)*10", "20"),
@@ -59,17 +58,10 @@ tests = [
 ]
 
 
-def run(code):
-    preprocessed = Preprocessor.run(code)
-    parsed = Parser.run(preprocessed)
-    evaluated = parsed.Evaluate()
-    return evaluated
-
-
 @pytest.mark.parametrize("input,output", tests)
 def test_result(input, output):
     if output is None:
         with pytest.raises(Exception):
-            run(input)
+            _run(input)
     else:
-        assert str(run(input)) == output
+        assert str(_run(input)) == output

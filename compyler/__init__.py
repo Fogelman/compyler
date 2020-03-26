@@ -10,3 +10,13 @@ __all__ = ['node',
            'preprocessor',
            'token',
            'tokenizer']
+
+from compyler.parser import Parser
+from compyler.preprocessor import Preprocessor
+
+
+def _run(code):
+    preprocessed = Preprocessor.run(code)
+    parsed = Parser.run(preprocessed)
+    evaluated = parsed.Evaluate()
+    return evaluated

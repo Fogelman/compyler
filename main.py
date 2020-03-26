@@ -1,14 +1,15 @@
 import sys
 import os
-from compyler.parser import Parser
-from compyler.preprocessor import Preprocessor
+import re
+from compyler import _run as run
 
 path = sys.argv[1]
+
+pattern = re.compile(r".*?\.php")
+if pattern.search(path) is None:
+    raise Exception("[-] invalid input file")
 
 with open(os.path.abspath(path), "r") as file:
     code = file.read()
 
-preprocessed = Preprocessor.run(code)
-parsed = Parser.run(preprocessed)
-evaluated = parsed.Evaluate()
-print(evaluated)
+print(run(code))
