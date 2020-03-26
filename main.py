@@ -5,7 +5,7 @@ from compyler import _run as run
 
 path = sys.argv[1]
 
-pattern = re.compile(r".*?\.php")
+pattern = re.compile(r".*?\.php$")
 if pattern.search(path) is None:
     raise Exception("[-] invalid input file")
 
