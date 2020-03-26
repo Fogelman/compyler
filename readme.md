@@ -1,5 +1,7 @@
 # compyler
 
+[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=master)](https://travis-ci.com/Fogelman/compyler)
+
 ```
 EBNF
 
