@@ -6,6 +6,14 @@ class Parser:
     tokens = None
 
     @staticmethod
+    def parseBlock():
+        pass
+
+    @staticmethod
+    def parseCommand():
+        pass
+
+    @staticmethod
     def parseFactor():
         tokens = Parser.tokens
         tokens.selectNext()
