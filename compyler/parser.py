@@ -1,5 +1,5 @@
 from compyler.tokenizer import Tokenizer
-from compyler.node import BinOp, UnOp, IntVal, NoOp
+from compyler.node import BinOp, UnOp, IntVal, NoOp, Identifier, Assignment, Commands, Echo
 
 
 class Parser:
@@ -7,11 +7,43 @@ class Parser:
 
     @staticmethod
     def parseBlock():
-        pass
+        tokens = Parser.tokens
+        tokens.selectNext()
+        result = []
+        if tokens.actual.type == "LBRACE":
+
+            tokens.selectNext()
+            while tokens.actual.type != "RBRACE":
+                result.append(Parser.parseCommand())
+                tokens.selectNext()
+        else:
+            raise Exception("[-] unexpected token.")
+
+        tokens.selectNext()
+        return Commands(None, result)
 
     @staticmethod
     def parseCommand():
-        pass
+        tokens = Parser.tokens
+        # tokens.selectNext()
+
+        if tokens.actual.type == "IDENTIFIER":
+            result = Assignment(tokens.actual.value)
+            tokens.selectNext()
+            if tokens.actual.type != "EQUAL":
+                raise Exception("[-] unexpected token.")
+            result.children = [Parser.parseExpression()]
+
+        elif tokens.actual.type == "COMMAND":
+            result = Echo(tokens.actual.value, [Parser.parseExpression()])
+        else:
+            result = Parser.parseBlock()
+
+        tokens.selectNext()
+        if tokens.actual.type != "SEMI":
+            raise Exception("[-] unexpected token.")
+
+        return result
 
     @staticmethod
     def parseFactor():
@@ -20,17 +52,16 @@ class Parser:
         result = None
         if tokens.actual.type == "INT":
             result = IntVal(int(tokens.actual.value))
-            tokens.selectNext()
-        elif(tokens.actual.type == "OPEN"):
+        elif tokens.actual.type == "OPEN":
             result = Parser.parseExpression()
             if(tokens.actual.type != "CLOSE"):
                 raise Exception("[-] unexpected token.")
-            tokens.selectNext()
-        elif(tokens.actual.type == "PLUS"):
+        elif tokens.actual.type == "PLUS":
             result = UnOp("PLUS", [Parser.parseFactor()])
-        elif(tokens.actual.type == "MINUS"):
+        elif tokens.actual.type == "MINUS":
             result = UnOp("MINUS", [Parser.parseFactor()])
-
+        elif tokens.actual.type == "IDENTIFIER":
+            result = Identifier(tokens.actual.value)
         else:
             raise Exception("[-] unexpected token.")
 
@@ -62,8 +93,7 @@ class Parser:
     @staticmethod
     def run(code):
         Parser.tokens = Tokenizer(code)
-        parsed = Parser.parseExpression()
+        parsed = Parser.parseBlock()
         if Parser.tokens.actual.type != "EOF":
             raise Exception("[-] unexpected token")
-
         return parsed

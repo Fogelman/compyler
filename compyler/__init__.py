@@ -13,10 +13,11 @@ __all__ = ['node',
 
 from compyler.parser import Parser
 from compyler.preprocessor import Preprocessor
+from compyler.symboltable import SymbolTable
 
 
 def _run(code):
     preprocessed = Preprocessor.run(code)
     parsed = Parser.run(preprocessed)
-    evaluated = parsed.Evaluate()
-    return evaluated
+    symboltable = SymbolTable()
+    return parsed.Evaluate(symboltable)
