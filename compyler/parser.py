@@ -54,14 +54,17 @@ class Parser:
             result = IntVal(int(tokens.actual.value))
         elif tokens.actual.type == "OPEN":
             result = Parser.parseExpression()
+            tokens.selectNext()
             if(tokens.actual.type != "CLOSE"):
                 raise Exception("[-] unexpected token.")
+            tokens.selectNext()
         elif tokens.actual.type == "PLUS":
             result = UnOp("PLUS", [Parser.parseFactor()])
         elif tokens.actual.type == "MINUS":
             result = UnOp("MINUS", [Parser.parseFactor()])
         elif tokens.actual.type == "IDENTIFIER":
             result = Identifier(tokens.actual.value)
+            tokens.selectNext()
         else:
             raise Exception("[-] unexpected token.")
 

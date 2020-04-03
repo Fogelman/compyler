@@ -59,7 +59,7 @@ class Assignment(Node):
 
 class Echo(Node):
     def Evaluate(self, st):
-        print(self.children[0].Evaluate(st))
+        print(self.children[0].Evaluate(st), end="")
 
 
 class Identifier(Node):
