@@ -12,4 +12,4 @@ if pattern.search(path) is None:
 with open(os.path.abspath(path), "r") as file:
     code = file.read()
 
-print(run(code))
+run(code)
