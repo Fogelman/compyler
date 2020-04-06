@@ -6,4 +6,4 @@ class Preprocessor:
 
     @staticmethod
     def run(code):
-        return re.sub(r"/\*.*?\*/", '', code)
+        return re.sub(r"/\*.*?\*/", '', code, flags=re.DOTALL)

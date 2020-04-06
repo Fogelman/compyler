@@ -1,5 +1,5 @@
 from compyler.tokenizer import Tokenizer
-from compyler.node import BinOp, UnOp, IntVal, NoOp, Identifier, Assignment, Commands, Echo
+from compyler.node import BinOp, UnOp, IntVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp
 
 
 class Parser:
@@ -8,7 +8,6 @@ class Parser:
     @staticmethod
     def parseBlock():
         tokens = Parser.tokens
-        tokens.selectNext()
         result = []
         if tokens.actual.type == "LBRACE":
             tokens.selectNext()
@@ -37,12 +36,14 @@ class Parser:
             tokens.selectNext()
             result = Echo(value, [Parser.parseExpression()])
 
+        elif tokens.actual.type == "SEMI":
+            tokens.selectNext()
+            return NoOp(None)
         else:
             return Parser.parseBlock()
 
         if tokens.actual.type != "SEMI":
             raise Exception("[-] unexpected token.")
-
         tokens.selectNext()
         return result
 
@@ -103,6 +104,7 @@ class Parser:
     @staticmethod
     def run(code):
         Parser.tokens = Tokenizer(code)
+        Parser.tokens.selectNext()
         parsed = Parser.parseBlock()
         if Parser.tokens.actual.type != "EOF":
             raise Exception("[-] unexpected token")
