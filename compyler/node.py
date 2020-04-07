@@ -47,7 +47,7 @@ class IntVal(Node):
 class NoOp(Node):
 
     def Evaluate(self, st):
-        return
+        pass
 
 
 class Assignment(Node):
