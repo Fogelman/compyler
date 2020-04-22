@@ -31,7 +31,7 @@ class Parser:
             tokens.selectNext()
             result.children = [Parser.parseExpression()]
 
-        elif tokens.actual.type == "COMMAND":
+        elif tokens.actual.value == "ECHO":
             value = tokens.actual.value
             tokens.selectNext()
             result = Echo(value, [Parser.parseExpression()])

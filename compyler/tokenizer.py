@@ -27,14 +27,25 @@ class Tokenizer:
         self.position = position
         self.actual = actual
         self._lenght = len(origin)
+        self.reserved = re.compile(
+            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(\b==)", re.IGNORECASE)
 
-    def _find(self, pattern, flags=0):
+    def _find(self, pattern, flags=0, error=True):
         match = pattern.match(self.origin[self.position:], flags)
 
-        if match is None:
+        if match is None and error:
             raise Exception(
                 f"[-] could not decode character at position {self.position}")
+        elif match is None:
+            return None
+
         return match.group()
+
+    def _check(self, pattern, flags=0):
+        match = pattern.search(self.origin[self.position:], flags)
+        if match is None:
+            return False
+        return True
 
     def selectNext(self):
         self._lenght = len(self.origin)
@@ -54,16 +65,13 @@ class Tokenizer:
             pattern = re.compile(r"^\$[a-z]+[_a-z0-9]*", re.IGNORECASE)
             string = self._find(pattern)
             self.actual = Token(string, "IDENTIFIER")
-        elif self.origin[self.position].isalpha():
-            pattern = re.compile(
-                r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)^(\band)", re.IGNORECASE)
-            string = self._find(pattern)
-            self.actual = Token(string, "COMMAND")
+        elif self._check(self.reserved):
+            string = self._find(self.reserved)
+            self.actual = Token(string.upper(), "RESERVED")
         elif self.origin[self.position] in tokens:
             actual = self.origin[self.position]
             self.actual = Token(actual, tokens[actual])
         else:
             raise Exception(
                 f"[-] could not decode character at position {self.position}")
-
         self.position += len(self.actual.value)
