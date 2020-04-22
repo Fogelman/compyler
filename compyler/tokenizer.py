@@ -14,7 +14,10 @@ tokens = {
     '{': "LBRACE",
     '}': "RBRACE",
     '=': "EQUAL",
-    ';': "SEMI"
+    ';': "SEMI",
+    '>': "GREATER",
+    '<': "LESS",
+    '!': "NOT"
 }
 
 
@@ -52,7 +55,8 @@ class Tokenizer:
             string = self._find(pattern)
             self.actual = Token(string, "IDENTIFIER")
         elif self.origin[self.position].isalpha():
-            pattern = re.compile(r"^(\becho)|^(\bwhile)", re.IGNORECASE)
+            pattern = re.compile(
+                r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)^(\band)", re.IGNORECASE)
             string = self._find(pattern)
             self.actual = Token(string, "COMMAND")
         elif self.origin[self.position] in tokens:
