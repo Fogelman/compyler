@@ -143,3 +143,7 @@ dmypy.json
 
 # Local History for Visual Studio Code
 .history/
+
+# Ignore local tests PHP
+
+*.php

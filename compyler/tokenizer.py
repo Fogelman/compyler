@@ -28,7 +28,7 @@ class Tokenizer:
         self.actual = actual
         self._lenght = len(origin)
         self.reserved = re.compile(
-            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(\b==)", re.IGNORECASE)
+            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)", re.IGNORECASE)
 
     def _find(self, pattern, flags=0, error=True):
         match = pattern.match(self.origin[self.position:], flags)
