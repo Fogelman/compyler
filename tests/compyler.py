@@ -9,11 +9,17 @@ cwd = os.getcwd()
 with open(os.path.join(cwd, "tests", "tests.json"), "r") as file:
     raw = json.load(file)
 
+"""
+Convert the list of dictionaries into tuple. There is no garanty of order. Only if it's an OrderDict
+"""
 tests = [[values for values in test.values()]
          for test in raw]
 
 
 def finput(inputs):
+    """
+    Receive list of inputs and return on each call
+    """
     for i in inputs:
         yield i
 

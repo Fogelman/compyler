@@ -6,12 +6,15 @@
 EBNF
 
 BLOCK = "{", { COMMAND }, "}" ;
-COMMAND = ( λ | ASSIGNMENT | PRINT), ";" | BLOCK ;
+COMMAND = ( λ | ASSIGNMENT | ECHO), ";" | BLOCK | WHILE | IF;
 ASSIGNMENT = IDENTIFIER, "=", EXPRESSION ;
-PRINT = "echo", EXPRESSION ;
-EXPRESSION = TERM, { ("+" | "-"), TERM } ;
-TERM = FACTOR, { ("*" | "/"), FACTOR } ;
-FACTOR = (("+" | "-"), FACTOR) | NUMBER | "(", EXPRESSION, ")" | IDENTIFIER ;
+ECHO = "ECHO", EXPRESSION ;
+IF = "(", RELEXPR, ")", COMMAND ["ELSE", COMMAND];
+WHILE = "(", RELEXPR, ")", COMMAND;
+RELEXPR = EXPRESSION, {"==", ">", "<", EXPRESSION} ;
+EXPRESSION = TERM, { ("+" | "-" | "OR"), TERM } ;
+TERM = FACTOR, { ("*" | "/" | "AND"), FACTOR } ;
+FACTOR = (("+" | "-" | "!"), FACTOR) | NUMBER | "(", RELEXPR, ")" | IDENTIFIER | "READLINE", "(", ")";
 IDENTIFIER = "$", LETTER, { LETTER | DIGIT | "_" } ;
 NUMBER = DIGIT, { DIGIT } ;
 LETTER = ( a | ... | z | A | ... | Z ) ;
