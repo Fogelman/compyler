@@ -47,7 +47,7 @@ class Parser:
                 tokens.selectNext()
                 command = Parser.parseCommand()
 
-                if tokens.actual.type == "ELSE":
+                if tokens.actual.value == "ELSE":
                     tokens.selectNext()
                     return If(
                         None, [relexpr, command, Parser.parseCommand()])
@@ -61,16 +61,13 @@ class Parser:
             if tokens.actual.type == "OPEN":
                 tokens.selectNext()
                 relexpr = Parser.parseRelationalExpression()
-
                 if(tokens.actual.type != "CLOSE"):
                     raise Exception("[-] unexpected token.")
                 tokens.selectNext()
                 command = Parser.parseCommand()
-
                 return While(None, [relexpr, command])
             else:
                 raise Exception("[-] unexpected token.")
-
         elif tokens.actual.type == "SEMI":
             tokens.selectNext()
             return NoOp(None)
@@ -107,14 +104,12 @@ class Parser:
         elif tokens.actual.value == "READLINE":
             tokens.selectNext()
             result = ReadLine(None, [])
-
             if(tokens.actual.type != "OPEN"):
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
             if(tokens.actual.type != "CLOSE"):
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
-
         elif tokens.actual.type == "IDENTIFIER":
             result = Identifier(tokens.actual.value)
             tokens.selectNext()

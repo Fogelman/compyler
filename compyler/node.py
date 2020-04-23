@@ -71,7 +71,11 @@ class Assignment(Node):
 
 class Echo(Node):
     def Evaluate(self, st):
-        print(self.children[0].Evaluate(st), end="\n")
+
+        result = self.children[0].Evaluate(st)
+        if type(result) is bool:
+            result = int(result)
+        print(result, end="\n")
 
 
 class If(Node):
