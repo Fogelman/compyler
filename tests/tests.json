@@ -1,11 +1,11 @@
 [
   {
-    "code": "\n{\n$x = 2;\n$z = $x + 3;\n$z = $z - 3;\necho ($z+1)*2;\n}\n    ",
+    "code": "\n{\n$x = 2;\n$z = $x + 3;\n$z = $z - 3;\necho ($z+1)*2;\n}",
     "expect": "6\n",
     "input": []
   },
   {
-    "code": "\n{\n$x = 2;\necho $x;\n}\n    ",
+    "code": "{$x = 2;echo $x;}",
     "expect": "2\n",
     "input": []
   },
@@ -15,32 +15,42 @@
     "input": []
   },
   {
-    "code": "\n{\n$x = -(2  +  3)/5;\n$y = $x + 5;\necho $x*$y+3- -2/4;\n}\n    ",
+    "code": "\n{\n$x = -(2  +  3)/5;\n$y = $x + 5;\necho $x*$y+3- -2/4;\n}\n",
     "expect": "0\n",
     "input": []
   },
   {
-    "code": "\n{\n$x = -(2  +  3)/5;\n$y = $x + 5;\nECHO $x*$y+3- -2/4;\n}\n    ",
+    "code": "\n{\n$x = -(2  +  3)/5;\n$y = $x + 5;\nECHO $x*$y+3- -2/4;\n}",
     "expect": "0\n",
     "input": []
   },
   {
-    "code": "\n{\n$x = 1\n}\n    ",
+    "code": "{$x = 1}",
     "expect": null,
     "input": []
   },
   {
-    "code": "\n{\n$x = 1;\n}\n    ",
+    "code": "{$x_a12319_____12312 = 1;$uuuuu_a12319_____12312 = 1;}",
     "expect": "",
     "input": []
   },
   {
-    "code": "{\n    {   \n    $a = 8;\n\techo $a;\n\t$b = 2 + $a;\n\techo $b;\n\t$a = $b;\n\techo $a;\n    }\n}",
+    "code": "{$1x_a12319_____12312 = 1;}",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "{$x =         \n\n\n               1           ;}",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "{{$a = 8;echo $a;$b = 2 + $a;echo $b;$a = $b;echo $a;}}",
     "expect": "8\n10\n10\n",
     "input": []
   },
   {
-    "code": "\n{\n    ;\n}",
+    "code": "{;}",
     "expect": "",
     "input": []
   },
@@ -50,17 +60,17 @@
     "input": []
   },
   {
-    "code": "\n\n/*\n\nHello World!\n\n*/\n\n{\n    {;}\n}",
+    "code": "\n/*\nHello World!\n*/\n{\n    {;}\n}",
     "expect": "",
     "input": []
   },
   {
-    "code": "\n\n/*\n\nHello World!\n\n*/\n\n{\n    $a = 123;\n    if(1==1){echo $a;}\n}",
+    "code": "\n/*\nHello World!\n*/\n{\n    $a = 123;\n    if(1==1){echo $a;}\n}",
     "expect": "123\n",
     "input": []
   },
   {
-    "code": "\n\n/*\n\nHello World!\n\n*/\n\n{\n    if(1==1){echo 123;}\n}",
+    "code": "\n/*\nHello World!\n*/\n{\n    if(1==1){echo 123;}\n}",
     "expect": "123\n",
     "input": []
   },
@@ -80,17 +90,17 @@
     "input": []
   },
   {
-    "code": "{$a = readline();echo $a;$b = readline();echo $b;}",
+    "code": "{$a = readline();echo $a;$b = rEaDLIne();echo $b;}",
     "expect": "1\n2\n",
     "input": [1, 2]
   },
   {
-    "code": "{$a=49;$b=48;if($a == ($b+1)){echo $a*$b;}else{echo 0;}}",
+    "code": "{$a=49;$b=48;if($a == ($b+1)){echo $a*$b;}ElSe{echo 0;}}",
     "expect": "2352\n",
     "input": []
   },
   {
-    "code": "{$a=49;$b=48;if($a == ($b)){echo $a*$b;}else{echo 0;}}",
+    "code": "{$a=49;$b=48;if(!($a == ($b+1))){echo $a*$b;}elSE{eCHo 0;}}",
     "expect": "0\n",
     "input": []
   }
