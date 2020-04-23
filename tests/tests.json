@@ -65,6 +65,16 @@
     "input": []
   },
   {
+    "code": "\n/*\nHello World!\n*/\n{\n  */  {;}\n}",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "\n/*     \nHello World!\n\n{\n  */ { {;}\n}",
+    "expect": "",
+    "input": []
+  },
+  {
     "code": "\n/*\nHello World!\n*/\n{\n    $a = 123;\n    if(1==1){echo $a;}\n}",
     "expect": "123\n",
     "input": []
@@ -93,6 +103,16 @@
     "code": "{$a = readline();echo $a;$b = rEaDLIne();echo $b;}",
     "expect": "1\n2\n",
     "input": [1, 2]
+  },
+  {
+    "code": "{$a = readline();$b = rEaDLIne();$c=$a*$b;if($c > 50 and $c<150){echo $c;}}",
+    "expect": "100\n",
+    "input": [25, 4]
+  },
+  {
+    "code": "{$a = readline();$b = rEaDLIne();$c=10*$a*$b;if(($c>10000) or ($c<100)){echo $c;}}",
+    "expect": "",
+    "input": [25, 4]
   },
   {
     "code": "{$a=49;$b=48;if($a == ($b+1)){echo $a*$b;}ElSe{echo 0;}}",
