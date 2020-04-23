@@ -1,5 +1,5 @@
 from compyler.tokenizer import Tokenizer
-from compyler.node import BinOp, UnOp, IntVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp
+from compyler.node import BinOp, UnOp, IntVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine
 
 
 class Parser:
@@ -29,13 +29,45 @@ class Parser:
             if tokens.actual.type != "EQUAL":
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
-            result.children = [Parser.parseExpression()]
+            result.children = [Parser.parseRelationalExpression()]
 
-        elif tokens.actual.type == "COMMAND":
+        elif tokens.actual.value == "ECHO":
             value = tokens.actual.value
             tokens.selectNext()
-            result = Echo(value, [Parser.parseExpression()])
+            result = Echo(value, [Parser.parseRelationalExpression()])
 
+        elif tokens.actual.value == "IF":
+            tokens.selectNext()
+            if tokens.actual.type == "OPEN":
+                tokens.selectNext()
+                relexpr = Parser.parseRelationalExpression()
+
+                if(tokens.actual.type != "CLOSE"):
+                    raise Exception("[-] unexpected token.")
+                tokens.selectNext()
+                command = Parser.parseCommand()
+
+                if tokens.actual.value == "ELSE":
+                    tokens.selectNext()
+                    return If(
+                        None, [relexpr, command, Parser.parseCommand()])
+
+                return If(None, [relexpr, command])
+            else:
+                raise Exception("[-] unexpected token.")
+
+        elif tokens.actual.value == "WHILE":
+            tokens.selectNext()
+            if tokens.actual.type == "OPEN":
+                tokens.selectNext()
+                relexpr = Parser.parseRelationalExpression()
+                if(tokens.actual.type != "CLOSE"):
+                    raise Exception("[-] unexpected token.")
+                tokens.selectNext()
+                command = Parser.parseCommand()
+                return While(None, [relexpr, command])
+            else:
+                raise Exception("[-] unexpected token.")
         elif tokens.actual.type == "SEMI":
             tokens.selectNext()
             return NoOp(None)
@@ -56,7 +88,7 @@ class Parser:
             tokens.selectNext()
         elif tokens.actual.type == "OPEN":
             tokens.selectNext()
-            result = Parser.parseExpression()
+            result = Parser.parseRelationalExpression()
             if(tokens.actual.type != "CLOSE"):
                 raise Exception("[-] unexpected token.")
             tokens.selectNext()
@@ -66,6 +98,18 @@ class Parser:
         elif tokens.actual.type == "MINUS":
             tokens.selectNext()
             result = UnOp("MINUS", [Parser.parseFactor()])
+        elif tokens.actual.value == "NOT":
+            tokens.selectNext()
+            result = UnOp("NOT", [Parser.parseFactor()])
+        elif tokens.actual.value == "READLINE":
+            tokens.selectNext()
+            result = ReadLine(None, [])
+            if(tokens.actual.type != "OPEN"):
+                raise Exception("[-] unexpected token.")
+            tokens.selectNext()
+            if(tokens.actual.type != "CLOSE"):
+                raise Exception("[-] unexpected token.")
+            tokens.selectNext()
         elif tokens.actual.type == "IDENTIFIER":
             result = Identifier(tokens.actual.value)
             tokens.selectNext()
@@ -79,26 +123,50 @@ class Parser:
         tokens = Parser.tokens
         result = Parser.parseFactor()
 
-        while tokens.actual.type in ["DIVIDE", "MULTIPLY"]:
+        while tokens.actual.value in ["/", "*", "AND"]:
             if tokens.actual.type == "MULTIPLY":
                 tokens.selectNext()
                 result = BinOp("MULTIPLY", [result, Parser.parseFactor()])
             elif tokens.actual.type == "DIVIDE":
                 tokens.selectNext()
                 result = BinOp("DIVIDE", [result, Parser.parseFactor()])
+            elif tokens.actual.value == "AND":
+                tokens.selectNext()
+                result = BinOp("AND", [result, Parser.parseFactor()])
         return result
 
     @staticmethod
     def parseExpression():
         tokens = Parser.tokens
         result = Parser.parseTerm()
-        while tokens.actual.type in ["PLUS", "MINUS"]:
+        while tokens.actual.value in ["+", "-", "OR"]:
             if tokens.actual.type == "PLUS":
                 tokens.selectNext()
                 result = BinOp("PLUS", [result, Parser.parseTerm()])
             elif tokens.actual.type == "MINUS":
                 tokens.selectNext()
                 result = BinOp("MINUS", [result, Parser.parseTerm()])
+            elif tokens.actual.value == "OR":
+                tokens.selectNext()
+                result = BinOp("OR", [result, Parser.parseTerm()])
+        return result
+
+    @staticmethod
+    def parseRelationalExpression():
+        tokens = Parser.tokens
+        result = Parser.parseExpression()
+        while tokens.actual.value in ["==", ">", "<"]:
+            if tokens.actual.value == "==":
+                tokens.selectNext()
+                result = BinOp("EQUAL", [result, Parser.parseExpression()])
+            elif tokens.actual.type == "GREATER":
+                tokens.selectNext()
+                result = BinOp("GREATER", [
+                    result, Parser.parseExpression()])
+            elif tokens.actual.type == "LESS":
+                tokens.selectNext()
+                result = BinOp("LESS", [
+                    result, Parser.parseExpression()])
         return result
 
     @staticmethod

@@ -27,6 +27,16 @@ class BinOp(Node):
             return self.children[0].Evaluate(st) // self.children[1].Evaluate(st)
         elif self.value == "MULTIPLY":
             return self.children[0].Evaluate(st) * self.children[1].Evaluate(st)
+        elif self.value == "AND":
+            return self.children[0].Evaluate(st) and self.children[1].Evaluate(st)
+        elif self.value == "OR":
+            return self.children[0].Evaluate(st) or self.children[1].Evaluate(st)
+        elif self.value == "LESS":
+            return self.children[0].Evaluate(st) < self.children[1].Evaluate(st)
+        elif self.value == "GREATER":
+            return self.children[0].Evaluate(st) > self.children[1].Evaluate(st)
+        elif self.value == "EQUAL":
+            return self.children[0].Evaluate(st) == self.children[1].Evaluate(st)
 
 
 class UnOp(Node):
@@ -36,6 +46,8 @@ class UnOp(Node):
             return self.children[0].Evaluate(st)
         elif self.value == "MINUS":
             return -self.children[0].Evaluate(st)
+        elif self.value == "NOT":
+            return not self.children[0].Evaluate(st)
 
 
 class IntVal(Node):
@@ -59,10 +71,37 @@ class Assignment(Node):
 
 class Echo(Node):
     def Evaluate(self, st):
-        print(self.children[0].Evaluate(st), end="\n")
+
+        result = self.children[0].Evaluate(st)
+        if type(result) is bool:
+            result = int(result)
+        print(result, end="\n")
+
+
+class If(Node):
+
+    def Evaluate(self, st):
+        if(self.children[0].Evaluate(st)):
+            self.children[1].Evaluate(st)
+        elif len(self.children) > 2:
+            self.children[2].Evaluate(st)
+
+
+class While(Node):
+
+    def Evaluate(self, st):
+        while(self.children[0].Evaluate(st)):
+            self.children[1].Evaluate(st)
+
+
+class ReadLine(Node):
+
+    def Evaluate(self, st):
+        return input()
 
 
 class Identifier(Node):
+
     def Evaluate(self, st):
         return st.get(self.value)
 
@@ -72,6 +111,3 @@ class Commands(Node):
     def Evaluate(self, st):
         for child in self.children:
             child.Evaluate(st)
-
-    # def addChild(self, child):
-    #     self.children.append(child)

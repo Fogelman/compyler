@@ -1,92 +1,39 @@
+import os
+import builtins
+import json
 import pytest
 from compyler import _run
 
-tests = [
-    ("""
-{
-$x = 2;
-$z = $x + 3;
-$z = $z - 3;
-echo ($z+1)*2;
-}
-    """, "6\n"),
-    ("""
-{
-$x = 2;
-echo $x;
-}
-    """, "2\n"),
-    ("""
-{
-$x = 2;
-ECHO $x;
-}
-    """, "2\n"),
-    ("""
-{
-$x = -(2  +  3)/5;
-$y = $x + 5;
-echo $x*$y+3- -2/4;
-}
-    """, "0\n"),
-    ("""
-{
-$x = -(2  +  3)/5;
-$y = $x + 5;
-ECHO $x*$y+3- -2/4;
-}
-    """, "0\n"),
-    ("""
-{
-$x = 1
-}
-    """, None),
 
-    ("""
-{
-$x = 1;
-}
-    """, ""),
+cwd = os.getcwd()
+with open(os.path.join(cwd, "tests", "tests.json"), "r") as file:
+    raw = json.load(file)
 
-    ("""{
-    {   
-    $a = 8;
-	echo $a;
-	$b = 2 + $a;
-	echo $b;
-	$a = $b;
-	echo $a;
-    }
-}""", "8\n10\n10\n"),
-
-    ("""
-{
-    ;
-}""", ""),
-    ("""
-{
-    {;}
-}""", ""),
-    ("""
-
-/*
-
-Hello World!
-
-*/
-
-{
-    {;}
-}""", "")
-]
+"""
+Convert the list of dictionaries into tuple. There is no garanty of order. Only if it's an OrderDict
+"""
+tests = [[values for values in test.values()]
+         for test in raw]
 
 
-@pytest.mark.parametrize("input,output", tests)
-def test_result(input, output, capsys):
-    if output is None:
-        with pytest.raises(Exception):
-            _run(input)
-    else:
-        _run(input)
-        captured = capsys.readouterr()
-        assert captured.out == output
+def finput(inputs):
+    """
+    Receive list of inputs and return on each call
+    """
+    for i in inputs:
+        yield i
+
+
+@pytest.mark.parametrize("code, expect, inputs", tests)
+def test_result(code, expect, inputs, capsys, monkeypatch):
+    generator = finput(inputs)
+    def mock(text=None): return next(generator)
+    with monkeypatch.context() as m:
+        m.setattr(builtins, 'input', mock)
+        if expect is None:
+            with pytest.raises(Exception):
+                _run(code)
+        else:
+            _run(code)
+            captured = capsys.readouterr()
+            assert captured.out == expect

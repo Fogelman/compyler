@@ -1,0 +1,97 @@
+[
+  {
+    "code": "\n{\n$x = 2;\n$z = $x + 3;\n$z = $z - 3;\necho ($z+1)*2;\n}\n    ",
+    "expect": "6\n",
+    "input": []
+  },
+  {
+    "code": "\n{\n$x = 2;\necho $x;\n}\n    ",
+    "expect": "2\n",
+    "input": []
+  },
+  {
+    "code": "\n{\n$x = 2;\nECHO $x;\n}\n    ",
+    "expect": "2\n",
+    "input": []
+  },
+  {
+    "code": "\n{\n$x = -(2  +  3)/5;\n$y = $x + 5;\necho $x*$y+3- -2/4;\n}\n    ",
+    "expect": "0\n",
+    "input": []
+  },
+  {
+    "code": "\n{\n$x = -(2  +  3)/5;\n$y = $x + 5;\nECHO $x*$y+3- -2/4;\n}\n    ",
+    "expect": "0\n",
+    "input": []
+  },
+  {
+    "code": "\n{\n$x = 1\n}\n    ",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "\n{\n$x = 1;\n}\n    ",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "{\n    {   \n    $a = 8;\n\techo $a;\n\t$b = 2 + $a;\n\techo $b;\n\t$a = $b;\n\techo $a;\n    }\n}",
+    "expect": "8\n10\n10\n",
+    "input": []
+  },
+  {
+    "code": "\n{\n    ;\n}",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "\n{\n    {;}\n}",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "\n\n/*\n\nHello World!\n\n*/\n\n{\n    {;}\n}",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "\n\n/*\n\nHello World!\n\n*/\n\n{\n    $a = 123;\n    if(1==1){echo $a;}\n}",
+    "expect": "123\n",
+    "input": []
+  },
+  {
+    "code": "\n\n/*\n\nHello World!\n\n*/\n\n{\n    if(1==1){echo 123;}\n}",
+    "expect": "123\n",
+    "input": []
+  },
+  {
+    "code": "{if(1==2){echo 123;}}",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "\n    {\n    $a = 3;\n    while($a>0){\n        echo 123;\n        $a = $a - 1;\n    }\n    }\n",
+    "expect": "123\n123\n123\n",
+    "input": []
+  },
+  {
+    "code": "\n    {\n        echo (1==1) and (2==3);\n        echo (1==1) and (2==2);\n        echo (1==1) or (2==3);\n        echo (1==1) or (2==2);\n    }\n",
+    "expect": "0\n1\n1\n1\n",
+    "input": []
+  },
+  {
+    "code": "{$a = readline();echo $a;$b = readline();echo $b;}",
+    "expect": "1\n2\n",
+    "input": [1, 2]
+  },
+  {
+    "code": "{$a=49;$b=48;if($a == ($b+1)){echo $a*$b;}else{echo 0;}}",
+    "expect": "2352\n",
+    "input": []
+  },
+  {
+    "code": "{$a=49;$b=48;if($a == ($b)){echo $a*$b;}else{echo 0;}}",
+    "expect": "0\n",
+    "input": []
+  }
+]
