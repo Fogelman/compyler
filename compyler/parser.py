@@ -98,7 +98,7 @@ class Parser:
         elif tokens.actual.type == "MINUS":
             tokens.selectNext()
             result = UnOp("MINUS", [Parser.parseFactor()])
-        elif tokens.actual.value == "NOT":
+        elif tokens.actual.type == "NOT":
             tokens.selectNext()
             result = UnOp("NOT", [Parser.parseFactor()])
         elif tokens.actual.value == "READLINE":
