@@ -1,5 +1,3 @@
-
-
 class SymbolTable:
     def __init__(self, symbols=None):
         self.symbols = symbols

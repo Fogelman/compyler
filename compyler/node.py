@@ -1,9 +1,10 @@
 
 from abc import ABC, abstractmethod
-# from symboltable import SymbolTable
+import operator as op
+from rply.token import BaseBox, Token
 
 
-class Node(ABC):
+class Node(BaseBox, ABC):
 
     def __init__(self, value, children=None):
         self.value = value
@@ -18,35 +19,36 @@ class Node(ABC):
 
 class BinOp(Node):
 
+    op_map = {
+        '+': op.add,
+        '-': op.sub,
+        '*': op.mul,
+        '/': op.truediv,
+        '//': op.floordiv,
+        '%': op.mod,
+        '&': op.and_,
+        '|': op.or_,
+        '<': op.lt,
+        '>': op.gt,
+        '<=': op.le,
+        '>=': op.ge,
+        '==': op.eq,
+        '!=': op.ne,
+    }
+
     def Evaluate(self, st):
-        if self.value == "PLUS":
-            return self.children[0].Evaluate(st) + self.children[1].Evaluate(st)
-        elif self.value == "MINUS":
-            return self.children[0].Evaluate(st) - self.children[1].Evaluate(st)
-        elif self.value == "DIVIDE":
-            return self.children[0].Evaluate(st) // self.children[1].Evaluate(st)
-        elif self.value == "MULTIPLY":
-            return self.children[0].Evaluate(st) * self.children[1].Evaluate(st)
-        elif self.value == "AND":
-            return self.children[0].Evaluate(st) and self.children[1].Evaluate(st)
-        elif self.value == "OR":
-            return self.children[0].Evaluate(st) or self.children[1].Evaluate(st)
-        elif self.value == "LESS":
-            return self.children[0].Evaluate(st) < self.children[1].Evaluate(st)
-        elif self.value == "GREATER":
-            return self.children[0].Evaluate(st) > self.children[1].Evaluate(st)
-        elif self.value == "EQUAL":
-            return self.children[0].Evaluate(st) == self.children[1].Evaluate(st)
+        return self.op_map[self.children[0].Evaluate(st), self.children[1].Evaluate(st)]
 
 
 class UnOp(Node):
 
     def Evaluate(self, st):
-        if self.value == "PLUS":
+
+        if self.value == "+":
             return self.children[0].Evaluate(st)
-        elif self.value == "MINUS":
+        elif self.value == "-":
             return -self.children[0].Evaluate(st)
-        elif self.value == "NOT":
+        elif self.value == "not":
             return not self.children[0].Evaluate(st)
 
 

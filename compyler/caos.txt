@@ -1,4 +1,3 @@
-```
 input: (NEWLINE | stmt)* ENDMARKER
 funcdef: 'def' NAME arglist suite
 
@@ -35,4 +34,3 @@ arith_expr: term (('+'|'-') term)*
 term: factor (('*'|'/'|'%'|'//') factor)*
 factor: ('+'|'-'|'~') factor | atom_expr
 atom_expr: '(' test ')' | NAME | NUMBER | 'None' | 'True' | 'False'
-```
