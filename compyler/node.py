@@ -23,6 +23,7 @@ class BinOp(Node):
         '+': op.add,
         '-': op.sub,
         '*': op.mul,
+        '^': op.xor,
         '/': op.truediv,
         '//': op.floordiv,
         '%': op.mod,
@@ -37,7 +38,7 @@ class BinOp(Node):
     }
 
     def Evaluate(self, st):
-        return self.op_map[self.children[0].Evaluate(st), self.children[1].Evaluate(st)]
+        return self.op_map[self.value](self.children[0].Evaluate(st), self.children[1].Evaluate(st))
 
 
 class UnOp(Node):
@@ -48,14 +49,26 @@ class UnOp(Node):
             return self.children[0].Evaluate(st)
         elif self.value == "-":
             return -self.children[0].Evaluate(st)
-        elif self.value == "not":
-            return not self.children[0].Evaluate(st)
+        elif self.value == "~":
+            return ~self.children[0].Evaluate(st)
 
 
 class IntVal(Node):
 
     def Evaluate(self, st):
-        return self.value
+        return int(self.value)
+
+
+class BoolVal(Node):
+
+    def Evaluate(self, st):
+        return bool(self.value)
+
+
+class AnyVal(Node):
+
+    def Evaluate(self, st):
+        return (self.value)
 
 
 class NoOp(Node):

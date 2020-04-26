@@ -25,14 +25,13 @@ test: or_test
 or_test: and_test ('or' and_test)*
 and_test: not_test ('and' not_test)*
 not_test: 'not' not_test | comparison
-comparison: expr (comp_op expr)*
+comparison: expr (('<'|'>'|'=='|'>='|'<='|'!=') expr)*
 
-comp_op: '<'|'>'|'=='|'>='|'<='|'!='
 expr: xor_expr ('|' xor_expr)*
 xor_expr: and_expr ('^' and_expr)*
-and_expr: arith_expr ('&' arith_expr)*
-arith_expr: term (('+'|'-') term)*
-term: factor (('*'|'/'|'%'|'//') factor)*
-factor: ('+'|'-'|'~') factor | atom_expr
-atom_expr: '(' test ')' | NAME | NUMBER | 'None' | 'True' | 'False'
+and_expr: arith ('&' arith)*
+arith: term | (term ('+'|'-') arith)
+term: factor | (factor ('*'|'/'|'%'|'//') term)
+factor: ('+'|'-'|'~') factor | atom
+atom: '(' test ')' | NAME | NUMBER | 'None' | 'True' | 'False'
 ```

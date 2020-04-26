@@ -20,4 +20,4 @@ def _run(code):
     st = SymbolTable()
     parser = Parser().build()
 
-    parser.parse(tokens).Evaluate(st)
+    return parser.parse(tokens).Evaluate(st)
