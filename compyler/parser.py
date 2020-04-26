@@ -7,14 +7,44 @@ class Parser:
     def __init__(self):
         self.pg = ParserGenerator(['INTEGER', 'BOOLEAN', 'IF', 'ELSE', 'NONE', 'AND', 'OR', 'NOT', 'IDENTIFIER', '==', '!=', '>=', '<=', '<', '~', '!',
                                    '^', '=', '>', '[', ']', '{', '}', '|', ',', '&', 'DOT', 'COLON', 'PLUS', 'MINUS', 'MUL', 'DIV', '//', 'MOD', 'OPEN', 'CLOSE', 'NEWLINE'],
-                                  precedence=[('left', ['<', '>', '==', '>=', '<=', '!=']),
-                                              ('left', ["|"]),
-                                              ('left', ["^"]),
-                                              ('left', ["&"]),
+                                  precedence=[('left', ['AND', 'OR']),
+                                              ('left', ['NOT']),
+                                              ('left', [
+                                                  '<', '>', '==', '>=', '<=', '!=']),
+                                              ('left', ["|", "^", "&"]),
                                               ('left', ["PLUS", "MINUS"]),
                                               ('left', ["DIV", "MUL", "MOD"])])
 
     def build(self):
+
+        @self.pg.production('stmt : simple_stmt')
+        def stmt(p):
+            return p[0]
+
+        @self.pg.production('simple_stmt : simple_stmt')
+        def simple_stmt(p):
+            return p[0]
+
+        @self.pg.production('small_stmt : simple_stmt')
+        def simple_stmt(p):
+            return p[0]
+
+        @self.pg.production('logical : not')
+        @self.pg.production('logical : not OR logical')
+        @self.pg.production('logical : not AND logical')
+        def logical(p):
+            if len(p) == 1:
+                return p[0]
+            else:
+                return BinOp(p[1].value, [p[0], p[2]])
+
+        @self.pg.production('not : comparison')
+        @self.pg.production('not : NOT not')
+        def logical_not(p):
+            if len(p) == 1:
+                return p[0]
+            else:
+                return UnOp(p[0].value, [p[1]])
 
         @self.pg.production('comparison : bitwise')
         @self.pg.production('comparison : bitwise < comparison')
@@ -77,9 +107,9 @@ class Parser:
         def boolean(p):
             return BoolVal(p[0].value)
 
-        @self.pg.production('atom : OPEN INTEGER CLOSE')
+        @self.pg.production('atom : OPEN logical CLOSE')
         def parenteses(p):
-            return IntVal(p[1].value)
+            return p[1]
 
         @self.pg.production('atom : NONE')
         def none(p):

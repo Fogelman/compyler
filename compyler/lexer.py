@@ -14,6 +14,7 @@ class Lexer:
         self.lexer.add('AND', r'and(?!\w)')
         self.lexer.add('OR', r'or(?!\w)')
         self.lexer.add('NOT', r'not(?!\w)')
+        self.lexer.add('RETURN', r'return(?!\w)')
         self.lexer.add('IDENTIFIER', r"[a-zA-Z_][a-zA-Z0-9_]*")
         self.lexer.add('!', r'\!')
         self.lexer.add('//', r'\/\/')

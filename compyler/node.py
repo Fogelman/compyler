@@ -35,6 +35,8 @@ class BinOp(Node):
         '>=': op.ge,
         '==': op.eq,
         '!=': op.ne,
+        'and': lambda a, b: a and b,
+
     }
 
     def Evaluate(self, st):
@@ -43,14 +45,16 @@ class BinOp(Node):
 
 class UnOp(Node):
 
-    def Evaluate(self, st):
+    op_map = {
+        '+': lambda a: +a,
+        '-': lambda a: -a,
+        '~': lambda a: -a,
+        'not': lambda a: not a,
 
-        if self.value == "+":
-            return self.children[0].Evaluate(st)
-        elif self.value == "-":
-            return -self.children[0].Evaluate(st)
-        elif self.value == "~":
-            return ~self.children[0].Evaluate(st)
+    }
+
+    def Evaluate(self, st):
+        return self.op_map[self.value](self.children[0].Evaluate(st))
 
 
 class IntVal(Node):
