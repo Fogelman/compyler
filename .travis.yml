@@ -10,3 +10,6 @@ install:
 
 script:
   - make test
+
+branches:
+  except: APS
