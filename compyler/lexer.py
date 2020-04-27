@@ -6,7 +6,7 @@ class Lexer:
         self.lexer = LexerGenerator()
 
     def _add(self):
-        self.lexer.add('INTEGER', r'-?\d+')
+        self.lexer.add('INTEGER', r'\d+')
         self.lexer.add('BOOLEAN', r'True(?!\w)|False(?!\w)')
         self.lexer.add('NONE', r'None(?!\w)')
         self.lexer.add('IF', r'if(?!\w)')
@@ -18,7 +18,6 @@ class Lexer:
         self.lexer.add('RETURN', r'return(?!\w)')
         self.lexer.add('PRINT', r'print(?!\w)')
         self.lexer.add('IDENTIFIER', r"[a-zA-Z_][a-zA-Z0-9_]*")
-        self.lexer.add('!', r'\!')
         self.lexer.add('//', r'\/\/')
         self.lexer.add('==', r'\=\=')
         self.lexer.add('!=', r'\!\=')

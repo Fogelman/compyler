@@ -6,7 +6,7 @@ class Parser:
 
     def __init__(self):
         self.pg = ParserGenerator(['INTEGER', 'BOOLEAN', 'NONE', 'IF', 'ELSE', 'WHILE', 'AND', 'OR', 'NOT', 'RETURN',
-                                   'PRINT', 'IDENTIFIER', '!', '//', '==', '!=', '>=', '<=', '<', '=', '~', '>', '[',
+                                   'PRINT', 'IDENTIFIER', '//', '==', '!=', '>=', '<=', '<', '=', '~', '>', '[',
                                    ']', '{', '}', '|', '&', '^', ',', 'DOT', 'COMMA', 'PLUS', 'MINUS', 'MUL', 'DIV',
                                    'MOD', 'OPEN', 'CLOSE', 'NEWLINE'],
                                   precedence=[('left', ['AND', 'OR']),
@@ -126,7 +126,6 @@ class Parser:
         @self.pg.production('arith : term MINUS arith')
         @self.pg.production('arith : term')
         def arith(p):
-            print("Arith", p)
             if len(p) == 1:
                 return p[0]
             else:
@@ -148,7 +147,6 @@ class Parser:
         @self.pg.production('factor : PLUS factor')
         @self.pg.production('factor : MINUS factor')
         def factor(p):
-            print(p)
             if len(p) == 2:
                 return UnOp(p[0].value, [p[1]])
             else:
