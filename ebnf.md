@@ -1,5 +1,5 @@
 ```
-input: (NEWLINE | stmt)*
+input: (stmt)*
 
 exprlist: expr (',' expr)* [',']
 testlist: test (',' test)* [',']
@@ -15,11 +15,13 @@ simple_stmt: ( expr_stmt | return_stmt ) NEWLINE
 expr_stmt: (test | NAME = test)
 return_stmt: 'return' [testlist]
 
-compound_stmt: if_stmt | while_stmt | funcdef | print_stmt
+compound_stmt: (if_stmt | while_stmt | funcdef | print_stmt ) [NEWLINE]
 if_stmt: 'if' test suite ['else' suite]
 
 while_stmt: 'while' test suite
 funcdef: 'def' NAME arglist suite
+funccall: NAME testlist
+
 print_stmt: 'print' '(' (test|expr) ')'
 
 test: and_test ('or' and_test)*
@@ -30,5 +32,5 @@ expr: arith | (arith ('|', '^', '&') expr)
 arith: term | (term ('+'|'-') arith)
 term: factor | (factor ('*'|'/'|'%'|'//') term)
 factor: ('+'|'-'|'~') factor | atom
-atom: '(' test ')' | NAME | NUMBER | 'None' | 'True' | 'False'
+atom: '(' test ')' | NAME | NUMBER | 'None' | 'True' | 'False' | funcall
 ```

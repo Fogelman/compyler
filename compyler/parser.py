@@ -37,7 +37,6 @@ class Parser:
     @pg.production('stmt : compound_stmt newline')
     @pg.production('stmt : compound_stmt')
     @pg.production('stmt : simple_stmt newline')
-    @pg.production('stmt : simple_stmt')
     def stmt(p):
         return p[0]
 

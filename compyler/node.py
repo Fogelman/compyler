@@ -133,3 +133,8 @@ class Commands(Node):
 
     def append(self, child):
         self.children.append(child)
+
+
+# class FuncDef(Node):
+#     def Evaluate(self, st):
+#         args = {}

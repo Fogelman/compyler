@@ -1,6 +1,6 @@
 # https://joshsharp.com.au/blog/rpython-rply-interpreter-1.html
 from compyler import _run
-code = """ABACATE = 11-12
+code = """ABACATE = 11---12
 if(True){
     print(ABACATE)
 }else{
@@ -11,6 +11,8 @@ a = 5
 while (a!=-1){
 a = a-1
 print(a)
+print(a)
+
 }
 """
 result = _run(code)
