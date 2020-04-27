@@ -1,22 +1,38 @@
 # compyler
 
-[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=master)](https://travis-ci.com/Fogelman/compyler)
+A revolutionary language to make your life harder
+
+[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=APS)](https://travis-ci.com/Fogelman/compyler)
+
+### Requirements
 
 ```
-EBNF
+python >= 3.x
+make >= 4.x
+pip
+```
 
-BLOCK = "{", { COMMAND }, "}" ;
-COMMAND = ( λ | ASSIGNMENT | ECHO), ";" | BLOCK | WHILE | IF;
-ASSIGNMENT = IDENTIFIER, "=", RELEXPR ;
-ECHO = "ECHO", RELEXPR ;
-IF = "IF", "(", RELEXPR, ")", COMMAND ["ELSE", COMMAND];
-WHILE = "WHILE", "(", RELEXPR, ")", COMMAND;
-RELEXPR = EXPRESSION, {"==", ">", "<", } ;
-EXPRESSION = TERM, { ("+" | "-" | "OR"), TERM } ;
-TERM = FACTOR, { ("*" | "/" | "AND"), FEXPRESSIONACTOR } ;
-FACTOR = (("+" | "-" | "!"), FACTOR) | NUMBER | "(", RELEXPR, ")" | IDENTIFIER | "READLINE", "(", ")";
-IDENTIFIER = "$", LETTER, { LETTER | DIGIT | "_" } ;
-NUMBER = DIGIT, { DIGIT } ;
-LETTER = ( a | ... | z | A | ... | Z ) ;
-DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
+### Setup
+
+```
+pip install -r requirements.txt
+```
+
+### Test
+
+The tests can be found in `./tests/tests.json`
+
+```
+make test
+```
+
+### Project Structure
+
+```
+compyler/
+├── __init__.py
+├── lexer.py
+├── node.py
+├── parser.py
+└── symboltable.py
 ```
