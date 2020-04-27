@@ -1,7 +1,23 @@
 [
   {
-    "code": "1+2",
+    "code": "1+",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "1+---+-+-2",
     "expect": "",
+    "input": []
+  },
+
+  {
+    "code": "print(1+2)",
+    "expect": "3\n",
+    "input": []
+  },
+  {
+    "code": "elsea=5\nwhile (elsea!=2){\nelsea = elsea-1\nprint(elsea)\n}",
+    "expect": "4\n3\n2\n",
     "input": []
   }
 ]

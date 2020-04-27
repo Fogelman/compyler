@@ -9,8 +9,8 @@ if(True){
 
 a = 5
 while (a!=2){
-    a = a-1
-    print(a)
+a = a-1
+print(a)
 }
 """
 result = _run(code)
