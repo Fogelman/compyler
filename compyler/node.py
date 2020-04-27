@@ -48,7 +48,7 @@ class UnOp(Node):
     op_map = {
         '+': lambda a: +a,
         '-': lambda a: -a,
-        '~': lambda a: -a,
+        '~': lambda a: ~a,
         'not': lambda a: not a,
 
     }
@@ -66,7 +66,10 @@ class IntVal(Node):
 class BoolVal(Node):
 
     def Evaluate(self, st):
-        return bool(self.value)
+        if(self.value == "True"):
+            return True
+        else:
+            return False
 
 
 class AnyVal(Node):
@@ -88,7 +91,7 @@ class Assignment(Node):
         st.set(self.value, a)
 
 
-class Echo(Node):
+class Print(Node):
     def Evaluate(self, st):
 
         result = self.children[0].Evaluate(st)
@@ -130,3 +133,6 @@ class Commands(Node):
     def Evaluate(self, st):
         for child in self.children:
             child.Evaluate(st)
+
+    def append(self, child):
+        self.children.append(child)
