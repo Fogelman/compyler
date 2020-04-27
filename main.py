@@ -8,7 +8,7 @@ if(True){
 }
 
 a = 5
-while (a!=2){
+while (a!=-1){
 a = a-1
 print(a)
 }

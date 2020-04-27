@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 import operator as op
-from rply.token import BaseBox, Token
+from rply.token import BaseBox
 
 
 class Node(BaseBox, ABC):
@@ -66,10 +66,7 @@ class IntVal(Node):
 class BoolVal(Node):
 
     def Evaluate(self, st):
-        if(self.value == "True"):
-            return True
-        else:
-            return False
+        return self.value == "True"
 
 
 class AnyVal(Node):
@@ -103,7 +100,7 @@ class Print(Node):
 class If(Node):
 
     def Evaluate(self, st):
-        if(self.children[0].Evaluate(st)):
+        if self.children[0].Evaluate(st):
             self.children[1].Evaluate(st)
         elif len(self.children) > 2:
             self.children[2].Evaluate(st)
@@ -112,7 +109,7 @@ class If(Node):
 class While(Node):
 
     def Evaluate(self, st):
-        while(self.children[0].Evaluate(st)):
+        while self.children[0].Evaluate(st):
             self.children[1].Evaluate(st)
 
 

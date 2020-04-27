@@ -16,6 +16,12 @@
     "input": []
   },
   {
+    "code": "a=True\nb=False\nprint(a)\nprint(b)\nprint(a and b)\n",
+    "expect": "1\n0\n0\n",
+    "input": []
+  },
+
+  {
     "code": "elsea=5\nwhile (elsea!=2){\nelsea = elsea-1\nprint(elsea)\n}",
     "expect": "4\n3\n2\n",
     "input": []
