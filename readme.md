@@ -26,6 +26,10 @@ The tests can be found in `./tests/tests.json`
 make test
 ```
 
+### EBNF
+
+The EBNF can be found at `./ebnf.md`
+
 ### Project Structure
 
 ```

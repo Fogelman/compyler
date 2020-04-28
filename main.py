@@ -15,6 +15,11 @@ def fibbonacci(n) {
    }
 }
 
+def test(){
+    print(1)
+}
+
+test()
 c  = fibbonacci(10)
 print(c)
 """

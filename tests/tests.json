@@ -41,5 +41,10 @@
     "code": "def fibbonacci(n) {\nif(n == 0){\n   return 0\n} else{\n     if(n == 1) {\n         return 1\n} else {\n         return (fibbonacci(n-1) + fibbonacci(n-2))\n     }\n}}\n c  = fibbonacci(10) \n print(c)",
     "expect": "55\n",
     "input": []
+  },
+  {
+    "code": "def test(){\nprint(1)\n\n}\n\ntest()\n",
+    "expect": "1\n",
+    "input": ""
   }
 ]

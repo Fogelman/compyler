@@ -4,7 +4,7 @@ input: [NEWLINE] (stmt)*
 exprlist: expr (',' expr)* [',']
 testlist: test (',' test)* [',']
 testlist_expr: (test|expr) (',' (test|expr))* [',']
-arglist: '(' argument (',' argument)* ')'
+arglist: argument (',' argument)*
 argument: NAME
 
 NEWLINE: '\n' | '\n' NEWLINE
@@ -19,8 +19,8 @@ compound_stmt: (if_stmt | while_stmt | funcdef | print_stmt ) [NEWLINE]
 if_stmt: 'if' test suite ['else' suite]
 
 while_stmt: 'while' test suite
-funcdef: 'def' NAME arglist suite
-funccall: NAME testlist
+funcdef: 'def' NAME '(' [arglist] ')' suite
+funccall: NAME '(' [testlist] ')'
 
 print_stmt: 'print' '(' (test|expr) ')'
 

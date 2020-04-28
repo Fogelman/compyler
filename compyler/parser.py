@@ -105,6 +105,11 @@ class Parser:
         return FuncAssignment(p[1].value, [p[3], p[5]])
 
     @staticmethod
+    @pg.production('funcdef : DEF IDENTIFIER OPEN CLOSE suite')
+    def funcdef_noargs(p):
+        return FuncAssignment(p[1].value, [[], p[4]])
+
+    @staticmethod
     @pg.production('print_stmt : PRINT OPEN logical CLOSE')
     def print_stmt(p):
 
@@ -234,6 +239,11 @@ class Parser:
     @pg.production('atom : IDENTIFIER OPEN testlists CLOSE')
     def funcall(p):
         return FuncCall(p[0].value, p[2])
+
+    @staticmethod
+    @pg.production('atom : IDENTIFIER OPEN  CLOSE')
+    def funcall_noargs(p):
+        return FuncCall(p[0].value, [])
 
     @staticmethod
     @pg.production("newline : NEWLINE")
