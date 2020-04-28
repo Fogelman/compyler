@@ -131,6 +131,8 @@ class Commands(Node):
     def Evaluate(self, st):
         for child in self.children:
             child.Evaluate(st)
+            if st.contains("return"):
+                return st.get("return")[0]
 
     def append(self, child):
         self.children.append(child)
@@ -147,13 +149,15 @@ class FuncAssignment(Node):
 class Return(Node):
     def Evaluate(self, st):
         result = []
+
+        if self.children is None or len(self.children) == 0:
+            result = [None]
+            return
+
         for child in self.children:
             result.append(child.Evaluate(st))
 
-        if len(result) == 0:
-            return [None]
-
-        return result
+        st.set("return", result)
 
 
 class FuncCall(Node):
@@ -171,5 +175,4 @@ class FuncCall(Node):
             evaled = arguments[i].Evaluate(st_parent)
             st.set(func.arguments[i], evaled)
 
-        result = func.suite.Evaluate(st)
-        return result
+        return func.suite.Evaluate(st)

@@ -1,5 +1,5 @@
 from rply import ParserGenerator
-from compyler.node import UnOp, BinOp, IntVal, AnyVal, Commands, If, While, Print, Assignment, BoolVal, Identifier, FuncAssignment, FuncCall
+from compyler.node import UnOp, BinOp, IntVal, AnyVal, Commands, If, While, Print, Assignment, BoolVal, Identifier, FuncAssignment, FuncCall, Return
 
 
 class Parser:
@@ -123,7 +123,10 @@ class Parser:
     @pg.production('return_stmt : RETURN')
     @pg.production('return_stmt : RETURN testlists')
     def return_stmt(p):
-        pass
+        if len(p) == 1:
+            return Return(None)
+
+        return Return(None, p[1])
 
     @staticmethod
     @pg.production('logical : not OR logical')
@@ -145,13 +148,13 @@ class Parser:
             return UnOp(p[0].value, [p[1]])
 
     @staticmethod
-    @pg.production('comparison : bitwise')
     @pg.production('comparison : bitwise < comparison')
     @pg.production('comparison : bitwise > comparison')
     @pg.production('comparison : bitwise == comparison')
     @pg.production('comparison : bitwise != comparison')
     @pg.production('comparison : bitwise >= comparison')
     @pg.production('comparison : bitwise <= comparison')
+    @pg.production('comparison : bitwise')
     def comparison(p):
         if len(p) == 1:
             return p[0]
@@ -159,10 +162,10 @@ class Parser:
             return BinOp(p[1].value, [p[0], p[2]])
 
     @staticmethod
-    @pg.production('bitwise : arith')
     @pg.production('bitwise : arith ^ bitwise')
     @pg.production('bitwise : arith | bitwise')
     @pg.production('bitwise : arith & bitwise')
+    @pg.production('bitwise : arith')
     def bitwise(p):
         if len(p) == 1:
             return p[0]

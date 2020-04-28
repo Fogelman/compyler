@@ -27,5 +27,13 @@ class SymbolTable:
 
         raise Exception(f"{key} not defined")
 
+    def contains(self, key):
+        if self.symbols.__contains__(key):
+            return self.symbols[key]
+        elif self.parent:
+            return self.parent.contains(key)
+
+        return False
+
     def __str__(self):
         return f"{self.symbols}"
