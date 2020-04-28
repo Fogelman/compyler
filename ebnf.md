@@ -12,14 +12,14 @@ NEWLINE: '\n' | '\n' NEWLINE
 suite: '{' NEWLINE stmt+ '}'
 stmt: (simple_stmt | compound_stmt )
 simple_stmt: ( expr_stmt | return_stmt ) NEWLINE
-expr_stmt: (test | NAME = test)
+expr_stmt: (test | NAME 'fifty-fifty' test)
 return_stmt: 'return' [testlist]
 
 compound_stmt: (if_stmt | while_stmt | funcdef | print_stmt ) [NEWLINE]
-if_stmt: 'if' test suite ['else' suite]
+if_stmt: 'isit' test suite ['other' suite]
 
-while_stmt: 'while' test suite
-funcdef: 'def' NAME '(' [arglist] ')' suite
+while_stmt: 'during' test suite
+funcdef: 'hmmm' NAME '(' [arglist] ')' suite
 funccall: NAME '(' [testlist] ')'
 
 print_stmt: 'print' '(' (test|expr) ')'
