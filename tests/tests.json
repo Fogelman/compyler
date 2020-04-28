@@ -35,5 +35,11 @@
     "code": "def abc(test , askjdkas){\nprint(1)\nif(test ==2){\n    print(123123)\n}}\nabc(2,2)\n",
     "expect": "1\n123123\n",
     "input": []
+  },
+
+  {
+    "code": "def fibbonacci(n) {\nif(n == 0){\n   return 0\n} else{\n     if(n == 1) {\n         return 1\n} else {\n         return (fibbonacci(n-1) + fibbonacci(n-2))\n     }\n}}\n c  = fibbonacci(10) \n print(c)",
+    "expect": "55\n",
+    "input": []
   }
 ]
