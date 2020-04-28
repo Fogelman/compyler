@@ -1,7 +1,8 @@
 
+from rply.token import BaseBox
 from abc import ABC, abstractmethod
 import operator as op
-from rply.token import BaseBox
+from compyler.symboltable import FunctionSymbol, SymbolTable
 
 
 class Node(BaseBox, ABC):
@@ -135,6 +136,27 @@ class Commands(Node):
         self.children.append(child)
 
 
-# class FuncDef(Node):
-#     def Evaluate(self, st):
-#         args = {}
+class FuncAssignment(Node):
+    def Evaluate(self, st):
+        st.set(self.value,
+               FunctionSymbol(
+                   self.children[0],
+                   self.children[1]))
+
+
+class FuncCall(Node):
+    def Evaluate(self, st_parent):
+
+        st = SymbolTable(None, st_parent)
+        func = st_parent.get(self.value)
+        arguments = self.children
+
+        if len(arguments) != len(func.arguments):
+            raise Exception(
+                'The amount of argument passed does not match function declaration')
+
+        for i in range(len(arguments)):
+            evaled = arguments[i].Evaluate(st_parent)
+            st.set(func.arguments[i], evaled)
+
+        return func.suite.Evaluate(st)

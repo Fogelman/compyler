@@ -1,13 +1,13 @@
 from rply import ParserGenerator
-from compyler.node import UnOp, BinOp, IntVal, AnyVal, Commands, If, While, Print, Assignment, BoolVal, Identifier
+from compyler.node import UnOp, BinOp, IntVal, AnyVal, Commands, If, While, Print, Assignment, BoolVal, Identifier, FuncAssignment, FuncCall
 
 
 class Parser:
 
-    pg = ParserGenerator(['INTEGER', 'BOOLEAN', 'NONE', 'IF', 'ELSE', 'WHILE', 'AND', 'OR', 'NOT', 'RETURN',
-                          'PRINT', 'IDENTIFIER', '//', '==', '!=', '>=', '<=', '<', '=', '~', '>', '[',
-                          ']', '{', '}', '|', '&', '^', ',', 'DOT', 'COMMA', 'PLUS', 'MINUS', 'MUL', 'DIV',
-                               'MOD', 'OPEN', 'CLOSE', 'NEWLINE'],
+    pg = ParserGenerator(['INTEGER', 'BOOLEAN', 'NONE', 'IF', 'ELSE', 'WHILE', 'DEF', 'AND', 'OR', 'NOT', 'RETURN',
+                          'PRINT', 'IDENTIFIER', '//', '==', '!=', '>=', '<=', '<', '=', '~', '>',
+                          '{', '}', '|', '&', '^', 'COMMA', 'PLUS', 'MINUS', 'MUL', 'DIV',
+                          'MOD', 'OPEN', 'CLOSE', 'NEWLINE'],
                          precedence=[('left', ['AND', 'OR']),
                                      ('left', ['NOT']),
                                      ('left', [
@@ -19,8 +19,9 @@ class Parser:
 
     @staticmethod
     @pg.production("main : stmtlst")
+    @pg.production("main : newline stmtlst")
     def main(p):
-        return p[0]
+        return p[len(p) - 1]
 
     @staticmethod
     @pg.production('stmtlst : stmt')
@@ -31,6 +32,28 @@ class Parser:
     @pg.production('stmtlst : stmtlst stmt')
     def stmtlist_stmtlist(p):
         p[0].append(p[1])
+        return p[0]
+
+    @staticmethod
+    @pg.production('arguments : IDENTIFIER')
+    def argument(p):
+        return [p[0].value]
+
+    @staticmethod
+    @pg.production('arguments : arguments COMMA IDENTIFIER')
+    def arguments(p):
+        p[0].append(p[2].value)
+        return p[0]
+
+    @staticmethod
+    @pg.production('testlists : logical')
+    def testlists(p):
+        return [p[0]]
+
+    @staticmethod
+    @pg.production('testlists : testlists COMMA logical')
+    def testlist(p):
+        p[0].append(p[2])
         return p[0]
 
     @staticmethod
@@ -54,6 +77,7 @@ class Parser:
     @pg.production('compound_stmt : if_stmt')
     @pg.production('compound_stmt : print_stmt')
     @pg.production('compound_stmt : while_stmt')
+    @pg.production('compound_stmt : funcdef')
     def compound_stmt(p):
         return p[0]
 
@@ -73,6 +97,11 @@ class Parser:
 
         if(len(p) < 6):
             return While(None, children=[p[2], p[4]])
+
+    @staticmethod
+    @pg.production('funcdef : DEF IDENTIFIER OPEN arguments CLOSE suite')
+    def funcdef(p):
+        return FuncAssignment(p[1].value, [p[3], p[5]])
 
     @staticmethod
     @pg.production('print_stmt : PRINT OPEN logical CLOSE')
@@ -190,6 +219,11 @@ class Parser:
     @pg.production('atom : NONE')
     def none(p):
         return AnyVal(None)
+
+    @staticmethod
+    @pg.production('atom : IDENTIFIER OPEN testlists CLOSE')
+    def funcall(p):
+        return FuncCall(p[0].value, p[2])
 
     @staticmethod
     @pg.production("newline : NEWLINE")

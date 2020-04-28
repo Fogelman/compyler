@@ -9,7 +9,11 @@
     "expect": "",
     "input": []
   },
-
+  {
+    "code": "\n\n\n\n\n1+---+-+-2\n",
+    "expect": "",
+    "input": []
+  },
   {
     "code": "print(1+2)",
     "expect": "3\n",

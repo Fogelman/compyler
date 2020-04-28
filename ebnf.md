@@ -1,5 +1,5 @@
 ```
-input: (stmt)*
+input: [NEWLINE] (stmt)*
 
 exprlist: expr (',' expr)* [',']
 testlist: test (',' test)* [',']
