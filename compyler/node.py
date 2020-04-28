@@ -144,6 +144,18 @@ class FuncAssignment(Node):
                    self.children[1]))
 
 
+class Return(Node):
+    def Evaluate(self, st):
+        result = []
+        for child in self.children:
+            result.append(child.Evaluate(st))
+
+        if len(result) == 0:
+            return [None]
+
+        return result
+
+
 class FuncCall(Node):
     def Evaluate(self, st_parent):
 
@@ -159,4 +171,5 @@ class FuncCall(Node):
             evaled = arguments[i].Evaluate(st_parent)
             st.set(func.arguments[i], evaled)
 
-        return func.suite.Evaluate(st)
+        result = func.suite.Evaluate(st)
+        return result

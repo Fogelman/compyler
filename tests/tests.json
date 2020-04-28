@@ -29,5 +29,11 @@
     "code": "elsea=5\nwhile (elsea!=2){\nelsea = elsea-1\nprint(elsea)\n}",
     "expect": "4\n3\n2\n",
     "input": []
+  },
+
+  {
+    "code": "def abc(test , askjdkas){\nprint(1)\nif(test ==2){\n    print(123123)\n}}\nabc(2,2)\n",
+    "expect": "1\n123123\n",
+    "input": []
   }
 ]

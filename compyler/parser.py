@@ -70,6 +70,7 @@ class Parser:
 
     @staticmethod
     @pg.production('simple_stmt : expr_stmt')
+    @pg.production('simple_stmt : return_stmt')
     def simple_stmt(p):
         return p[0]
 
@@ -117,6 +118,12 @@ class Parser:
             return p[0]
         else:
             return Assignment(p[0].value, [p[2]])
+
+    @staticmethod
+    @pg.production('return_stmt : RETURN')
+    @pg.production('return_stmt : RETURN testlists')
+    def return_stmt(p):
+        pass
 
     @staticmethod
     @pg.production('logical : not OR logical')
