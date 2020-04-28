@@ -2,17 +2,33 @@
 from compyler import _run
 code = """
 
-def abc(test , askjdkas){
-    print(1)
 
-    if(test ==2){
-        print(123123)
-    }
-
-    return 1
+def fibbonacci(n) {
+   if(n == 0){
+      return 0
+   } else{
+        if(n == 1) {
+            return 1
+        } else {
+            return (fibbonacci(n-1) + fibbonacci(n-2))
+        }
+   }
 }
 
-c  = abc(2,2)
+c  = fibbonacci(10)
 print(c)
 """
 result = _run(code)
+
+
+def fibbonacci(n):
+    if(n == 0):
+        return 0
+    else:
+        if(n == 1):
+            return 1
+        else:
+            return (fibbonacci(n-1) + fibbonacci(n-2))
+
+
+print(fibbonacci(10))
