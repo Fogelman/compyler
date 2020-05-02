@@ -173,5 +173,21 @@
     "code": "<?php if ((True or true or TrUe or TRUE) and (False or false or FalSe or FALSE)){echo 1;}?>",
     "expect": "",
     "input": []
+  },
+
+  {
+    "code": " <?php$x = 1 + True; /* Ok */$x = 1 and True; /* Ok */$x = \"a\" == \"b\"; /* Ok, resultado bool: False */$x = \"a\" . 1 . True; /* Ok */?>",
+    "expect": "",
+    "input": []
+  },
+  {
+    "code": "  <?php\n$x = True and \"a\"; /* ERROR: Incompatible types */?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "  <?php\n$x = 1 + \"a\"; /* ERROR: Incompatible types */?>",
+    "expect": null,
+    "input": []
   }
 ]
