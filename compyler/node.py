@@ -117,6 +117,11 @@ class Identifier(Node):
         return st.get(self.value)
 
 
+class StringVal(Node):
+    def Evaluate(self, st):
+        return self.value
+
+
 class Commands(Node):
 
     def Evaluate(self, st):

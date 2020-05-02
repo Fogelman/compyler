@@ -1,5 +1,5 @@
 from compyler.tokenizer import Tokenizer
-from compyler.node import BinOp, UnOp, IntVal, BoolVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine
+from compyler.node import BinOp, UnOp, IntVal, BoolVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine, StringVal
 
 
 class Parser:
@@ -9,9 +9,9 @@ class Parser:
     def parseProgram():
         tokens = Parser.tokens
         result = []
-        if tokens.actual.type == "OPEN_PHP":
+        if tokens.actual.value == "<?PHP":
             tokens.selectNext()
-            while tokens.actual.type != "CLOSE_PHP":
+            while tokens.actual.value != "?>":
                 result.append(Parser.parseCommand())
         else:
             raise Exception("[-] unexpected token.")
@@ -130,6 +130,9 @@ class Parser:
         elif tokens.actual.type == "IDENTIFIER":
             result = Identifier(tokens.actual.value)
             tokens.selectNext()
+        elif tokens.actual.type == "STRING":
+            result = StringVal(tokens.actual.value)
+            tokens.selectNext()
         else:
             raise Exception("[-] unexpected token.")
 
@@ -151,7 +154,7 @@ class Parser:
     def parseExpression():
         tokens = Parser.tokens
         result = Parser.parseTerm()
-        while tokens.actual.value in ["+", "-", "OR"]:
+        while tokens.actual.value in ["+", "-", "OR", "."]:
 
             value = tokens.actual.value
             tokens.selectNext()
@@ -172,7 +175,7 @@ class Parser:
     def run(code):
         Parser.tokens = Tokenizer(code)
         Parser.tokens.selectNext()
-        parsed = Parser.parseBlock()
+        parsed = Parser.parseProgram()
         if Parser.tokens.actual.type != "EOF":
             raise Exception("[-] unexpected token")
         return parsed
