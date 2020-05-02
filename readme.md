@@ -1,6 +1,6 @@
 # compyler
 
-[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=master)](https://travis-ci.com/Fogelman/compyler)
+[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=2.3.0)](https://travis-ci.com/Fogelman/compyler)
 
 ```
 EBNF

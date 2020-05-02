@@ -17,7 +17,8 @@ tokens = {
     ';': "SEMI",
     '>': "GREATER",
     '<': "LESS",
-    '!': "NOT"
+    '!': "NOT",
+    '.': "CONCAT"
 }
 
 
@@ -28,7 +29,13 @@ class Tokenizer:
         self.actual = actual
         self._lenght = len(origin)
         self.reserved = re.compile(
-            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)", re.IGNORECASE)
+            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
+
+        self.boolean = re.compile(r"^(\btrue)|^(\bfalse)", re.IGNORECASE)
+
+        self.tags = re.compile(r"^(\<\?php)|^(\?\>)")
+
+        self.string = re.compile(r"^(\"[^\"]*\")")
 
     def _find(self, pattern, flags=0, error=True):
         match = pattern.match(self.origin[self.position:], flags)
@@ -65,12 +72,23 @@ class Tokenizer:
             pattern = re.compile(r"^\$[a-z]+[_a-z0-9]*", re.IGNORECASE)
             string = self._find(pattern)
             self.actual = Token(string, "IDENTIFIER")
+        elif self._check(self.boolean):
+            string = self._find(self.boolean)
+            self.actual = Token(string.upper(), "BOOLEAN")
         elif self._check(self.reserved):
             string = self._find(self.reserved)
             self.actual = Token(string.upper(), "RESERVED")
+        elif self._check(self.tags):
+            string = self._find(self.tags)
+            self.actual = Token(string.upper(), "TAGS")
+        elif self._check(self.string):
+            string = self._find(self.string)
+            self.actual = Token(string[1:-1], "STRING")
+            self.position += 2
         elif self.origin[self.position] in tokens:
             actual = self.origin[self.position]
             self.actual = Token(actual, tokens[actual])
+
         else:
             raise Exception(
                 f"[-] could not decode character at position {self.position}")
