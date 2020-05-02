@@ -1,5 +1,7 @@
 
 from abc import ABC, abstractmethod
+
+import operator as op
 # from symboltable import SymbolTable
 
 
@@ -18,25 +20,28 @@ class Node(ABC):
 
 class BinOp(Node):
 
+    op_map = {
+        '+': op.add,
+        '-': op.sub,
+        '*': op.mul,
+        '^': op.xor,
+        '/': op.floordiv,
+        '//': op.floordiv,
+        '%': op.mod,
+        '&': op.and_,
+        '|': op.or_,
+        '<': op.lt,
+        '>': op.gt,
+        '<=': op.le,
+        '>=': op.ge,
+        '==': op.eq,
+        '!=': op.ne,
+        'AND': lambda a, b: a and b,
+        'OR': lambda a, b: a or b
+    }
+
     def Evaluate(self, st):
-        if self.value == "PLUS":
-            return self.children[0].Evaluate(st) + self.children[1].Evaluate(st)
-        elif self.value == "MINUS":
-            return self.children[0].Evaluate(st) - self.children[1].Evaluate(st)
-        elif self.value == "DIVIDE":
-            return self.children[0].Evaluate(st) // self.children[1].Evaluate(st)
-        elif self.value == "MULTIPLY":
-            return self.children[0].Evaluate(st) * self.children[1].Evaluate(st)
-        elif self.value == "AND":
-            return self.children[0].Evaluate(st) and self.children[1].Evaluate(st)
-        elif self.value == "OR":
-            return self.children[0].Evaluate(st) or self.children[1].Evaluate(st)
-        elif self.value == "LESS":
-            return self.children[0].Evaluate(st) < self.children[1].Evaluate(st)
-        elif self.value == "GREATER":
-            return self.children[0].Evaluate(st) > self.children[1].Evaluate(st)
-        elif self.value == "EQUAL":
-            return self.children[0].Evaluate(st) == self.children[1].Evaluate(st)
+        return self.op_map[self.value](self.children[0].Evaluate(st), self.children[1].Evaluate(st))
 
 
 class UnOp(Node):
@@ -94,10 +99,16 @@ class While(Node):
             self.children[1].Evaluate(st)
 
 
+class BoolVal(Node):
+
+    def Evaluate(self, st):
+        return self.value
+
+
 class ReadLine(Node):
 
     def Evaluate(self, st):
-        return input()
+        return int(input())
 
 
 class Identifier(Node):

@@ -1,9 +1,23 @@
 from compyler.tokenizer import Tokenizer
-from compyler.node import BinOp, UnOp, IntVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine
+from compyler.node import BinOp, UnOp, IntVal, BoolVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine
 
 
 class Parser:
     tokens = None
+
+    @staticmethod
+    def parseProgram():
+        tokens = Parser.tokens
+        result = []
+        if tokens.actual.type == "OPEN_PHP":
+            tokens.selectNext()
+            while tokens.actual.type != "CLOSE_PHP":
+                result.append(Parser.parseCommand())
+        else:
+            raise Exception("[-] unexpected token.")
+
+        tokens.selectNext()
+        return Commands(None, result)
 
     @staticmethod
     def parseBlock():
@@ -86,6 +100,9 @@ class Parser:
         if tokens.actual.type == "INT":
             result = IntVal(int(tokens.actual.value))
             tokens.selectNext()
+        elif tokens.actual.type == "BOOLEAN":
+            result = BoolVal(tokens.actual.value == "TRUE")
+            tokens.selectNext()
         elif tokens.actual.type == "OPEN":
             tokens.selectNext()
             result = Parser.parseRelationalExpression()
@@ -124,15 +141,10 @@ class Parser:
         result = Parser.parseFactor()
 
         while tokens.actual.value in ["/", "*", "AND"]:
-            if tokens.actual.type == "MULTIPLY":
-                tokens.selectNext()
-                result = BinOp("MULTIPLY", [result, Parser.parseFactor()])
-            elif tokens.actual.type == "DIVIDE":
-                tokens.selectNext()
-                result = BinOp("DIVIDE", [result, Parser.parseFactor()])
-            elif tokens.actual.value == "AND":
-                tokens.selectNext()
-                result = BinOp("AND", [result, Parser.parseFactor()])
+
+            value = tokens.actual.value
+            tokens.selectNext()
+            result = BinOp(value, [result, Parser.parseFactor()])
         return result
 
     @staticmethod
@@ -140,15 +152,10 @@ class Parser:
         tokens = Parser.tokens
         result = Parser.parseTerm()
         while tokens.actual.value in ["+", "-", "OR"]:
-            if tokens.actual.type == "PLUS":
-                tokens.selectNext()
-                result = BinOp("PLUS", [result, Parser.parseTerm()])
-            elif tokens.actual.type == "MINUS":
-                tokens.selectNext()
-                result = BinOp("MINUS", [result, Parser.parseTerm()])
-            elif tokens.actual.value == "OR":
-                tokens.selectNext()
-                result = BinOp("OR", [result, Parser.parseTerm()])
+
+            value = tokens.actual.value
+            tokens.selectNext()
+            result = BinOp(value, [result, Parser.parseTerm()])
         return result
 
     @staticmethod
@@ -156,17 +163,9 @@ class Parser:
         tokens = Parser.tokens
         result = Parser.parseExpression()
         while tokens.actual.value in ["==", ">", "<"]:
-            if tokens.actual.value == "==":
-                tokens.selectNext()
-                result = BinOp("EQUAL", [result, Parser.parseExpression()])
-            elif tokens.actual.type == "GREATER":
-                tokens.selectNext()
-                result = BinOp("GREATER", [
-                    result, Parser.parseExpression()])
-            elif tokens.actual.type == "LESS":
-                tokens.selectNext()
-                result = BinOp("LESS", [
-                    result, Parser.parseExpression()])
+            value = tokens.actual.value
+            tokens.selectNext()
+            result = BinOp(value, [result, Parser.parseExpression()])
         return result
 
     @staticmethod

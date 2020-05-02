@@ -28,7 +28,10 @@ class Tokenizer:
         self.actual = actual
         self._lenght = len(origin)
         self.reserved = re.compile(
-            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)", re.IGNORECASE)
+            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
+
+        self.boolean = re.compile(
+            r"^(\btrue)|^(\bfalse)", re.IGNORECASE)
 
     def _find(self, pattern, flags=0, error=True):
         match = pattern.match(self.origin[self.position:], flags)
@@ -65,6 +68,9 @@ class Tokenizer:
             pattern = re.compile(r"^\$[a-z]+[_a-z0-9]*", re.IGNORECASE)
             string = self._find(pattern)
             self.actual = Token(string, "IDENTIFIER")
+        elif self._check(self.boolean):
+            string = self._find(self.boolean)
+            self.actual = Token(string.upper(), "BOOLEAN")
         elif self._check(self.reserved):
             string = self._find(self.reserved)
             self.actual = Token(string.upper(), "RESERVED")
