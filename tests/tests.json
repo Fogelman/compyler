@@ -176,8 +176,8 @@
   },
 
   {
-    "code": " <?php$x = 1 + True; /* Ok */$x = 1 and True; /* Ok */$x = \"a\" == \"b\"; /* Ok, resultado bool: False */$x = \"a\" . 1 . True; /* Ok */?>",
-    "expect": "",
+    "code": " <?php$x = 1 + True; /* Ok */$x = 1 and True; /* Ok */$x = \"a\" == \"b\"; /* Ok, resultado bool: False */$x = \"a\" . 1 . True; /* Ok */\necho $x;?>",
+    "expect": "a11\n",
     "input": []
   },
   {
