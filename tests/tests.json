@@ -189,5 +189,10 @@
     "code": "  <?php\n$x = 1 + \"a\"; /* ERROR: Incompatible types */?>",
     "expect": null,
     "input": []
+  },
+  {
+    "code": "  <?php\n$x = 1.\"a\"; /* ERROR: Incompatible types */?>",
+    "expect": null,
+    "input": []
   }
 ]
