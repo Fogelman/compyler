@@ -21,23 +21,18 @@ class Node(ABC):
 class BinOp(Node):
 
     op_map = {
-        '+': {"function": op.add, "types": ["INT", "BOOL"]},
-        '-': {"function": op.sub,   "types": ["INT", "BOOL"]},
-        '*': {"function": op.mul,   "types": ["INT", "BOOL"]},
-        '^': {"function": op.xor,   "types": ["INT", "BOOL"]},
-        '/': {"function": op.floordiv,  "types": ["INT", "BOOL"]},
-        '%': {"function": op.mod,   "types": ["INT", "BOOL"]},
-        '&': {"function": op.and_,  "types": ["INT", "BOOL"]},
-        '|': {"function": op.or_,   "types": ["INT", "BOOL"]},
-        '<': {"function": op.lt,    "types": ["INT", "BOOL"]},
-        '>': {"function": op.gt,    "types": ["INT", "BOOL"]},
-        '<=': {"function": op.le,   "types": ["INT", "BOOL"]},
-        '>=': {"function": op.ge,   "types": ["INT", "BOOL"]},
-        '==': {"function": op.eq,   "types": ["INT", "BOOL", "STRING"]},
-        '!=': {"function": op.ne,   "types": ["INT", "BOOL", "STRING"]},
-        '.': {"function": lambda a, b: str(a) + str(b),   "types": ["INT", "BOOL", "STRING"]},
-        'AND': {"function": lambda a, b: a and b, "types": ["INT", "BOOL"]},
-        'OR': {"function": lambda a, b: a or b, "types": ["INT", "BOOL"]},
+        '+': {"function": op.add, "types": ["INT", "BOOL"], "result": "INT"},
+        '-': {"function": op.sub,   "types": ["INT", "BOOL"], "result": "INT"},
+        '*': {"function": op.mul,   "types": ["INT", "BOOL"], "result": "INT"},
+        '/': {"function": op.floordiv,  "types": ["INT", "BOOL"], "result": "INT"},
+        '<': {"function": op.lt,    "types": ["INT", "BOOL"], "result": "BOOL"},
+        '>': {"function": op.gt,    "types": ["INT", "BOOL"], "result": "BOOL"},
+        '<=': {"function": op.le,   "types": ["INT", "BOOL"], "result": "BOOL"},
+        '>=': {"function": op.ge,   "types": ["INT", "BOOL"], "result": "BOOL"},
+        '==': {"function": op.eq,   "types": ["INT", "BOOL", "STRING"], "result": "BOOL"},
+        'AND': {"function": lambda a, b: a and b, "types": ["INT", "BOOL"], "result": "BOOL"},
+        'OR': {"function": lambda a, b: a or b, "types": ["INT", "BOOL"], "result": "BOOL"},
+        '.': {"function": lambda a, b: str(a) + str(b),   "types": ["INT", "BOOL", "STRING"], "result": "STRING"},
     }
 
     def Evaluate(self, st):
@@ -49,12 +44,17 @@ class BinOp(Node):
         error = False
 
         error |= self.value == "." and l[1] != "STRING"
-        error |= (l[1] == "STRING" or r[1] == "STRING") and self.value != "."
+        # Verify  operation PHP
+        error |= ((l[1] == "STRING" and r[1] != "STRING") or (
+            l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
         error |= l[1] not in operation["types"] or r[1] not in operation["types"]
-
         if error:
             raise Exception("Operation not supported by types")
-        return (operation["function"](l[0], r[0]), "INT")
+
+        result = operation["function"](l[0], r[0])
+        if operation["result"] == "BOOL":
+            result = int(bool(result))
+        return (result, operation["result"])
 
 
 class UnOp(Node):
@@ -67,12 +67,19 @@ class UnOp(Node):
 
     def Evaluate(self, st):
 
-        result = self.children[0].Evaluate(st)
+        child = self.children[0].Evaluate(st)
 
-        if result[1] not in ["BOOL", "INT"]:
+        if child[1] not in ["BOOL", "INT"]:
             raise SyntaxError(
-                f"Cannot apply operation to variable of type {result[1]}")
-        return (self.op_map[self.value](result[0]), result[1])
+                f"Cannot apply operation to variable of type {child[1]}")
+
+        result = self.op_map[self.value](child[0])
+
+        if self.value == "NOT":
+            result = int(result)
+            return (result, "BOOL")
+
+        return (result, child[1])
 
 
 class IntVal(Node):
@@ -96,10 +103,7 @@ class Assignment(Node):
 
 class Echo(Node):
     def Evaluate(self, st):
-
         result = self.children[0].Evaluate(st)[0]
-        if type(result) is bool:
-            result = int(result)
         print(result, end="\n")
 
 
