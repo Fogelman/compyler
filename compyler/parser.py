@@ -162,7 +162,7 @@ class Parser:
     def parseRelationalExpression():
         tokens = Parser.tokens
         result = Parser.parseExpression()
-        while tokens.actual.value in ["==", ">", "<"]:
+        while tokens.actual.value in ["==", ">", "<", ">=", "<="]:
             value = tokens.actual.value
             tokens.selectNext()
             result = BinOp(value, [result, Parser.parseExpression()])

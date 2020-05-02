@@ -33,6 +33,9 @@ class Tokenizer:
         self.boolean = re.compile(
             r"^(\btrue)|^(\bfalse)", re.IGNORECASE)
 
+        self.tags = re.compile(
+            r"^(\b\<)|^(\bfalse)", re.IGNORECASE)
+
     def _find(self, pattern, flags=0, error=True):
         match = pattern.match(self.origin[self.position:], flags)
 

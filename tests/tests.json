@@ -161,7 +161,7 @@
   },
   {
     "code": "{$a = 0;$b = True;while (($a < 99999) and $b){$a = $a +1;echo $a;if ($a == 5){$b = False;}}echo $a;}",
-    "expect": "1\n2\n3\n5\n5\n",
+    "expect": "1\n2\n3\n4\n5\n5\n",
     "input": []
   },
   {
@@ -170,8 +170,8 @@
     "input": []
   },
   {
-    "code": "if ((True or true or TrUe or TRUE) and (False or false or FalSe or FALSE)){echo 1;}}",
-    "expect": "1\n",
+    "code": "{if ((True or true or TrUe or TRUE) and (False or false or FalSe or FALSE)){echo 1;}}",
+    "expect": "",
     "input": []
   }
 ]
