@@ -19,7 +19,6 @@ tokens = {
     '<': "LESS",
     '!': "NOT",
     '.': "CONCAT"
-
 }
 
 
@@ -82,9 +81,10 @@ class Tokenizer:
         elif self._check(self.tags):
             string = self._find(self.tags)
             self.actual = Token(string.upper(), "TAGS")
-        elif self.origin[self.position] == "\"":
+        elif self._check(self.string):
             string = self._find(self.string)
-            self.actual = Token(string.upper(), "STRING")
+            self.actual = Token(string[1:-1], "STRING")
+            self.position += 2
         elif self.origin[self.position] in tokens:
             actual = self.origin[self.position]
             self.actual = Token(actual, tokens[actual])

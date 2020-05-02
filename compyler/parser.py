@@ -111,10 +111,10 @@ class Parser:
             tokens.selectNext()
         elif tokens.actual.type == "PLUS":
             tokens.selectNext()
-            result = UnOp("PLUS", [Parser.parseFactor()])
+            result = UnOp("+", [Parser.parseFactor()])
         elif tokens.actual.type == "MINUS":
             tokens.selectNext()
-            result = UnOp("MINUS", [Parser.parseFactor()])
+            result = UnOp("-", [Parser.parseFactor()])
         elif tokens.actual.type == "NOT":
             tokens.selectNext()
             result = UnOp("NOT", [Parser.parseFactor()])
