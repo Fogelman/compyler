@@ -42,7 +42,9 @@ class BinOp(Node):
         operation = self.op_map[self.value]
 
         error = False
-        error |= self.value == "." and l[1] != "STRING"
+
+        # error |= self.value == "." and l[1] != "STRING"
+        # Verify  operation PHP
         error |= ((l[1] == "STRING" and r[1] != "STRING") or (
             l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
         error |= l[1] not in operation["types"] or r[1] not in operation["types"]
