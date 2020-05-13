@@ -102,17 +102,26 @@
   {
     "code": "<?php{$a = readline();echo $a;$b = rEaDLIne();echo $b;}?>",
     "expect": "1\n2\n",
-    "input": [1, 2]
+    "input": [
+      1,
+      2
+    ]
   },
   {
     "code": "<?php{$a = readline();$b = rEaDLIne();$c=$a*$b;if($c > 50 and $c<150){echo $c;}}?>",
     "expect": "100\n",
-    "input": [25, 4]
+    "input": [
+      25,
+      4
+    ]
   },
   {
     "code": "<?php{$a = readline();$b = rEaDLIne();$c=10*$a*$b;if(($c>10000) or ($c<100)){echo $c;}}?>",
     "expect": "",
-    "input": [25, 4]
+    "input": [
+      25,
+      4
+    ]
   },
   {
     "code": "<?php{$a=49;$b=48;if($a == ($b+1)){echo $a*$b;}ElSe{echo 0;}}?>",
@@ -174,7 +183,6 @@
     "expect": "",
     "input": []
   },
-
   {
     "code": " <?php$x = 1 + True; /* Ok */$x = 1 and True; /* Ok */$x = \"a\" == \"b\"; /* Ok, resultado bool: False */$x = \"a\" . 1 . True; /* Ok */\necho $x;?>",
     "expect": "a11\n",
@@ -204,5 +212,332 @@
     "code": "  <?php\n $a = 1 . true . \"a\";echo $a;?>",
     "expect": "11a\n",
     "input": []
+  },
+  {
+    "code": "<?php\n{\necho 1+1;\necho 21+21;\necho 83-41;\n}?>",
+    "expect": "2\n42\n42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\necho 5*5;\necho 5/5;\necho 0/5;\necho 1/2;\necho 50*50;\n}?>",
+    "expect": "25\n1\n0\n0\n2500\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$y2 = 4;\n$z_final = $x1 + $y2;\necho $z_final;\n}?>",
+    "expect": "7\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3; /* bla bla $x1 = 9999998 */\n$y2 = 4;\n$z_final = $x1 + $y2 *33;\necho $z_final;\n}?>",
+    "expect": "135\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$y2 = 4;\n$z_final = ($x1 + $y2) *33;\necho $z_final;\n}?>",
+    "expect": "231\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$x1 = $x1 +1;\necho $x1;\n}?>",
+    "expect": "4\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$x1 = $x1 +1;\n\necho $x1;\n\n$y1 = $x1 *100;\necho $y1;\n}?>",
+    "expect": "4\n400\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$x1 = $x1 +1;\necho $X1;\n}?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$x1 = ($x1 +1 * 3;\necho $x1;\n}?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x1 = 3;\n$y2 = 4;\n$z_final = ($x1 + $y2) *33;\necho $z_final;\n?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{ {{\necho 42;\n} }}?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\necho 42?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\necho $x;\n}?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$1x = 42;\necho $1x;\n}?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n\n    echo 1;\n}?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n$x_1x = 42;\necho $x_1x;\n}?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    echo 1;\n    Echo 2;\n    ecHo 3;\n    ECHO 4;\n}?>",
+    "expect": "1\n2\n3\n4\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    echo 1;\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n\n    if (10 < 20) {\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    \n    if (30 < 20) {\n    echo 0;\n    }\n    else{\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    else{\n        echo 1;\n    }\n}\n?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    if ((1==1) or (1==0)){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    $f = 1;\n    if ($f == 1){\n        echo $f;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    if ((1==1) and (1==0)){\n        echo 0;\n    }\n    else{\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    if ((1<2) or (0>2)){\n        echo 1;\n    }\n    else{\n        echo 0;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    if (! (1==0)) {\n        echo 1;\n    }\n    else{\n        echo 0;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{\n    if (! (((1>0) or (1==0)) and (0==9))){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    $a = 0;\n    while ($a < 3){\n        $a = $a +1;\n        echo $a;\n    }\n}\n?>",
+    "expect": "1\n2\n3\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    $a = 0;\n    while ($a < 3){\n        $a = $a +1;\n        echo $a;\n    }\n}\n?>",
+    "expect": "1\n2\n3\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    $a = 0;\n    $b = 1;\n    while (($a < 99999) and ($b ==1)){\n        $a = $a +1;\n        echo $a;\n        if ($a == 5){\n            $b = 0;\n        }\n    }\n    echo $a;\n}\n?>",
+    "expect": "1\n2\n3\n4\n5\n5\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    if 1==1{\n        echo 1;\n    }\n}\n?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    if (0==0){\n        echo 1;\n    }\n    else {\n    }\n    else{\n    }\n}\n?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    if (((1==1) or (1==1) OR (1==1)) oR ((1==0) AND (1==0) AnD (1==0))){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n\n{   \n    if (-5 < 4){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $x = readline();\n    echo $x;\n}\n?>",
+    "expect": "42\n",
+    "input": [
+      42
+    ]
+  },
+  {
+    "code": "<?php\n{\n    $x = readline();\n    $x = readline();\n    echo $x;\n}\n?>",
+    "expect": "8\n",
+    "input": [
+      2,
+      8
+    ]
+  },
+  {
+    "code": "<?php\n{\n    $x = readline();\n    $y = $x*2;\n    echo $y;\n}\n?>",
+    "expect": "84\n",
+    "input": [
+      42
+    ]
+  },
+  {
+    "code": "<?php\n{\n    $x = readline();\n    $y = readline();\n    echo $x+$y;\n}\n?>",
+    "expect": "9\n",
+    "input": [
+      5,
+      4
+    ]
+  },
+  {
+    "code": "<?php\n{\n    if (true){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if (true or false){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if (true and (1==1)){\n        echo 1;\n    }\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if (true and (!(1==1))){\n        echo 1;\n    }\n    else{\n        echo 2;\n    }\n}\n?>",
+    "expect": "2\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if (true and (!(1==1))){\n        echo 1;\n    }\n    else{\n        echo 2;\n    }\n}\n?>",
+    "expect": "2\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n  $x = true;\n  if ($x){\n    echo 42;\n  }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n  $x = true;\n  if ($x){\n    echo 42;\n  }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{   \n    if (((true) or (TrUe) OR (TRUE)) oR ((false) AND (False) AnD (FALSE))){\n        echo 42;\n    }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $a = true;\n    $b = TrUe;\n    $c = TRUE;\n    $d = false;\n    $e = False;\n    $f = FALSE;\n    if ((($a) or ($b) OR ($c)) oR (($d) AND ($e) AnD ($f))){\n        echo 42;\n    }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $y = true+1;\n    echo $y;\n}\n?>",
+    "expect": "2\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $y = false+1;\n    echo $y;\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n  if(1){\n    echo 42;\n  }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n  if(2){\n    echo 42;\n  }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n  if(2 or false){\n    echo 42;\n  }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if(0 or false){\n        echo 1;\n    }\n    else{\n        echo 42;\n    }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if(0 or false){\n        echo 1;\n    }\n    else{\n        echo 42;\n    }\n}\n?>",
+    "expect": "42\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $a = \"hello\";\n    echo $a;\n}\n?>",
+    "expect": "hello\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $a = \"hello\" . \" world\";\n    echo $a;\n}\n?>",
+    "expect": "hello world\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $b = 57;\n    $a = \"esse \u00e9 o teste \" . $b . \" eu acho\";\n    echo $a;\n}\n?>",
+    "expect": "esse \u00e9 o teste 57 eu acho\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $a = 1 . true . \"a\";\n    echo $a;\n}\n?>",
+    "expect": "11a\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $a = 1 + \"a\";\n}\n?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if(\"a\"){\n        echo 1\n    }\n}\n?>",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "\n<?php\n$a = 1 + \"a\";\n?>\n\n",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    if(\"a\"){\n        echo 1\n    }\n}\n",
+    "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    $x = readline();\n    echo $x;\n}?>\n",
+    "expect": null,
+    "input": [
+      "blabla,eu sou uma string de input, deveria dar erro "
+    ]
   }
 ]
