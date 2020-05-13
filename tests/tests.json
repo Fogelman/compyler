@@ -191,8 +191,18 @@
     "input": []
   },
   {
-    "code": "  <?php\n$x = 1.\"a\"; /* ERROR: Incompatible types */?>",
-    "expect": null,
+    "code": "  <?php\n$x = 1.\"a\"; echo $x;?>",
+    "expect": "1a\n",
+    "input": []
+  },
+  {
+    "code": "  <?php\n$b = 57;$a = \"esse é o teste \" . $b . \" eu acho\";echo $a;?>",
+    "expect": "esse é o teste 57 eu acho\n",
+    "input": []
+  },
+  {
+    "code": "  <?php\n $a = 1 . true . \"a\";echo $a;?>",
+    "expect": "11a\n",
     "input": []
   }
 ]

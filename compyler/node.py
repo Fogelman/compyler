@@ -43,7 +43,7 @@ class BinOp(Node):
 
         error = False
 
-        error |= self.value == "." and l[1] != "STRING"
+        # error |= self.value == "." and l[1] != "STRING"
         # Verify  operation PHP
         error |= ((l[1] == "STRING" and r[1] != "STRING") or (
             l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
