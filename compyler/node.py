@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 
 import operator as op
-from symboltable import FunctionSymbol, SymbolTable
+from compyler.symboltable import FunctionSymbol, SymbolTable
 
 
 class Node(ABC):
@@ -43,7 +43,6 @@ class BinOp(Node):
 
         error = False
 
-        # error |= self.value == "." and l[1] != "STRING"
         # Verify  operation PHP
         error |= ((l[1] == "STRING" and r[1] != "STRING") or (
             l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
