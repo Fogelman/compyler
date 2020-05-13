@@ -6,6 +6,10 @@ class Parser:
     tokens = None
 
     @staticmethod
+    def parseArgs():
+        pass
+
+    @staticmethod
     def parseProgram():
         tokens = Parser.tokens
         result = []
@@ -82,6 +86,20 @@ class Parser:
                 return While(None, [relexpr, command])
             else:
                 raise Exception("[-] unexpected token.")
+
+        elif tokens.actual.value == "FUNCTION":
+            tokens.selectNext()
+            if tokens.actual.type == "OPEN":
+                tokens.selectNext()
+                relexpr = Parser.parseRelationalExpression()
+                if(tokens.actual.type != "CLOSE"):
+                    raise Exception("[-] unexpected token.")
+                tokens.selectNext()
+                command = Parser.parseCommand()
+                return While(None, [relexpr, command])
+            else:
+                raise Exception("[-] unexpected token.")
+
         elif tokens.actual.type == "SEMI":
             tokens.selectNext()
             return NoOp(None)

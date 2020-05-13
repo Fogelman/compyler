@@ -29,7 +29,7 @@ class Tokenizer:
         self.actual = actual
         self._lenght = len(origin)
         self.reserved = re.compile(
-            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
+            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\bfunction)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
 
         self.boolean = re.compile(r"^(\btrue)|^(\bfalse)", re.IGNORECASE)
 
