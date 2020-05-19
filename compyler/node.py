@@ -100,9 +100,9 @@ class Echo(Node):
     def Evaluate(self, st):
 
         r = self.children[0].Evaluate(st)[0]
-        r += """PUSH EBX; Empilhe os argumentos
-CALL print; Chamada da função
-POP EBX; Desempilhe os argumentos\n"""
+        r += """PUSH EBX
+CALL print
+POP EBX\n"""
 
         return (r, None)
 
@@ -110,7 +110,7 @@ POP EBX; Desempilhe os argumentos\n"""
 class ReadLine(Node):
 
     def Evaluate(self, st):
-        return (f"MOV EBX, ${0};\n", "BOOL")
+        return (f"MOV EBX, ${0}\n", "BOOL")
 
 
 class If(Node):
@@ -118,39 +118,40 @@ class If(Node):
     def Evaluate(self, st):
 
         r = self.children[0].Evaluate(st)[0]
-        r += f"""CMP EBX, False ; verifica se o teste deu falso
+        r += f"""CMP EBX, False
 JE IF_{self.id} ; vai para o if
 {self.children[1].Evaluate(st)[0]}
 JMP IF_EXIT_{self.id}
 IF_{self.id}:
 {self.children[2].Evaluate(st)[0]}
-IF_EXIT_{self.id}:\n\n"""
+IF_EXIT_{self.id}:\n"""
         return (r, None)
 
 
 class While(Node):
 
     def Evaluate(self, st):
-        return (f"""LOOP_{self.id}: ; o unique identifier do nó while é 34
-; instruções do filho esquerdo do while - retorna o resultado em EBX
+        return (f"""\nLOOP_{self.id}:
 {self.children[0].Evaluate(st)[0]}
-CMP EBX, False ; verifica se o teste deu falso
-JE EXIT_{self.id} ; e sai caso for igual a falso.
+CMP EBX, False
+JE EXIT_{self.id}
 {self.children[1].Evaluate(st)[0]}
-; instruções do filho direito do while.
-JMP LOOP_{self.id} ; volta para testar de novo
-EXIT_{self.id}:\n\n""", None)
+JMP LOOP_{self.id}
+EXIT_{self.id}:\n""", None)
 
 
 class Assignment(Node):
 
     def Evaluate(self, st):
 
-        r = "PUSH DWORD 0;\n"
+        r = ""
         c = self.children[0].Evaluate(st)
-        offset = st.set(self.value, c[1])
+        offset, push = st.set(self.value, c[1])
+
+        if push:
+            r = "\nPUSH DWORD 0\n"
         r += c[0]
-        r += f"MOV [EBP-{offset[1]}], EBX;\n"
+        r += f"MOV [EBP-{offset[1]}], EBX\n"
 
         return (r, c[1])
 
@@ -160,26 +161,26 @@ class Identifier(Node):
     def Evaluate(self, st):
         get = st.get(self.value)
         offset = get[1]
-        r = f"""MOV EBX, [EBP-{offset}];\n"""
+        r = f"""MOV EBX, [EBP-{offset}]\n"""
         return (r, get[0])
 
 
 class IntVal(Node):
 
     def Evaluate(self, st):
-        return (f"MOV EBX, ${self.value};\n", "BOOL")
+        return (f"MOV EBX, {self.value}\n", "BOOL")
 
 
 class StringVal(Node):
     def Evaluate(self, st):
-        return (f"MOV EBX, ${0};\n", "BOOL")
+        return (f"MOV EBX, {0}\n", "BOOL")
 
 
 class BoolVal(Node):
 
     def Evaluate(self, st):
         parsed = int(self.value == True)
-        return (f"MOV EBX, ${parsed};\n", "BOOL")
+        return (f"MOV EBX, {parsed}\n", "BOOL")
 
 
 class Commands(Node):

@@ -15,11 +15,11 @@ class SymbolTable:
     def set(self, key, value):
 
         if self.symbols.__contains__(key):
-            return self.symbols[key]
+            return self.symbols[key], False
 
         self.offset += self.dsize[value]
         self.symbols[key] = [value, self.offset]
-        return self.symbols[key]
+        return self.symbols[key], True
 
     def get(self, key):
         return self.symbols[key]
