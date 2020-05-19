@@ -2,59 +2,32 @@
 from abc import ABC, abstractmethod
 
 import operator as op
-# from symboltable import SymbolTable
 
 
 class Node(ABC):
+    id = -1
 
     def __init__(self, value, children=None):
+        self.id = Node.new()
         self.value = value
         self.children = children
         if children is None:
             self.children = list()
+
+    @staticmethod
+    def new():
+        Node.id += 1
+        return Node.id
 
     @abstractmethod
     def Evaluate(self, st):
         pass
 
 
-class BinOp(Node):
-
-    op_map = {
-        '+': {"function": op.add, "types": ["INT", "BOOL"], "result": "INT"},
-        '-': {"function": op.sub,   "types": ["INT", "BOOL"], "result": "INT"},
-        '*': {"function": op.mul,   "types": ["INT", "BOOL"], "result": "INT"},
-        '/': {"function": op.floordiv,  "types": ["INT", "BOOL"], "result": "INT"},
-        '<': {"function": op.lt,    "types": ["INT", "BOOL"], "result": "BOOL"},
-        '>': {"function": op.gt,    "types": ["INT", "BOOL"], "result": "BOOL"},
-        '<=': {"function": op.le,   "types": ["INT", "BOOL"], "result": "BOOL"},
-        '>=': {"function": op.ge,   "types": ["INT", "BOOL"], "result": "BOOL"},
-        '==': {"function": op.eq,   "types": ["INT", "BOOL", "STRING"], "result": "BOOL"},
-        'AND': {"function": lambda a, b: a and b, "types": ["INT", "BOOL"], "result": "BOOL"},
-        'OR': {"function": lambda a, b: a or b, "types": ["INT", "BOOL"], "result": "BOOL"},
-        '.': {"function": lambda a, b: str(a) + str(b),   "types": ["INT", "BOOL", "STRING"], "result": "STRING"},
-    }
+class NoOp(Node):
 
     def Evaluate(self, st):
-
-        l = self.children[0].Evaluate(st)
-        r = self.children[1].Evaluate(st)
-        operation = self.op_map[self.value]
-
-        error = False
-
-        # error |= self.value == "." and l[1] != "STRING"
-        # Verify  operation PHP
-        error |= ((l[1] == "STRING" and r[1] != "STRING") or (
-            l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
-        error |= l[1] not in operation["types"] or r[1] not in operation["types"]
-        if error:
-            raise Exception("Operation not supported by types")
-
-        result = operation["function"](l[0], r[0])
-        if operation["result"] == "BOOL":
-            result = int(bool(result))
-        return (result, operation["result"])
+        pass
 
 
 class UnOp(Node):
@@ -82,75 +55,138 @@ class UnOp(Node):
         return (result, child[1])
 
 
-class IntVal(Node):
+class BinOp(Node):
+
+    op_map = {
+        '+': {"function": "ADD EAX, EBX;\nMOV EBX, EAX\n", "types": ["INT", "BOOL"], "result": "INT"},
+        '-': {"function": "SUB EAX, EBX;\nMOV EBX, EAX\n",   "types": ["INT", "BOOL"], "result": "INT"},
+        '*': {"function": "IMUL EBX;\nMOV EBX, EAX;\n",   "types": ["INT", "BOOL"], "result": "INT"},
+        '/': {"function": "IDIV EBX;\nMOV EBX, EAX;\n",  "types": ["INT", "BOOL"], "result": "INT"},
+        '<': {"function": "CMP EAX, EBX;\nCALL binop_jl;\n",    "types": ["INT", "BOOL"], "result": "BOOL"},
+        '>': {"function": "CMP EAX, EBX;\nCALL binop_jg;\n",    "types": ["INT", "BOOL"], "result": "BOOL"},
+        '<=': {"function": "CMP EAX, EBX;\nCALL binop_jle;\n",   "types": ["INT", "BOOL"], "result": "BOOL"},
+        '>=': {"function": "CMP EAX, EBX;\nCALL binop_jge;\n",   "types": ["INT", "BOOL"], "result": "BOOL"},
+        '==': {"function": "CMP EAX, EBX;\nCALL binop_je;\n",   "types": ["INT", "BOOL", "STRING"], "result": "BOOL"},
+        'AND': {"function": "AND EAX, EBX;\nMOV EBX, EAX\n", "types": ["INT", "BOOL"], "result": "BOOL"},
+        'OR': {"function": "OR EAX, EBX;\nMOV EBX, EAX\n", "types": ["INT", "BOOL"], "result": "BOOL"},
+    }
 
     def Evaluate(self, st):
-        return (self.value, "INT")
 
+        l = self.children[0].Evaluate(st)
+        r = self.children[1].Evaluate(st)
+        operation = self.op_map[self.value]
 
-class NoOp(Node):
+        error = False
 
-    def Evaluate(self, st):
-        pass
+        result = l[0]
+        result += "PUSH EBX ; empilha f\n"
+        result = r[0]
+        result += "POP EAX ;\n"
+        result += operation["function"]
 
+        # error |= ((l[1] == "STRING" and r[1] != "STRING") or (
+        #     l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
+        error |= l[1] not in operation["types"] or r[1] not in operation["types"]
+        if error:
+            raise Exception(f"Type {l[1]} and {r[1]} cannot be operated")
 
-class Assignment(Node):
+        # result = operation["function"](l[0], r[0])
 
-    def Evaluate(self, st):
-        a = self.children[0].Evaluate(st)
-        st.set(self.value, a)
+        return (result, operation["result"])
 
 
 class Echo(Node):
     def Evaluate(self, st):
-        result = self.children[0].Evaluate(st)[0]
-        print(result, end="\n")
+
+        r = self.children[0].Evaluate(st)[0]
+        r += """PUSH EBX; Empilhe os argumentos
+CALL print; Chamada da função
+POP EBX; Desempilhe os argumentos\n"""
+
+        return (r, None)
+
+
+class ReadLine(Node):
+
+    def Evaluate(self, st):
+        return (f"MOV EBX, ${0};\n", "BOOL")
 
 
 class If(Node):
 
     def Evaluate(self, st):
 
-        if(self.children[0].Evaluate(st)[0]):
-            self.children[1].Evaluate(st)
-        elif len(self.children) > 2:
-            self.children[2].Evaluate(st)
+        r = self.children[0].Evaluate(st)[0]
+        r += f"""CMP EBX, True ; verifica se o teste deu falso
+JE IF_{self.id} ; vai para o if
+{self.children[1].Evaluate(st)[0]}
+JMP IF_EXIT_{self.id}
+IF_{self.id}:
+{self.children[2].Evaluate(st)[0]}
+IF_EXIT_{self.id}:\n"""
+        return (r, None)
 
 
 class While(Node):
 
     def Evaluate(self, st):
-        while(self.children[0].Evaluate(st)[0]):
-            self.children[1].Evaluate(st)
+        return (f"""LOOP_{self.id}: ; o unique identifier do nó while é 34
+; instruções do filho esquerdo do while - retorna o resultado em EBX
+{self.children[0].Evaluate(st)[0]}
+CMP EBX, False ; verifica se o teste deu falso
+JE EXIT_{self.id} ; e sai caso for igual a falso.
+{self.children[1].Evaluate(st)[0]}
+; instruções do filho direito do while.
+JMP LOOP_34 ; volta para testar de novo
+EXIT_{self.id}:\n\n""", None)
 
 
-class BoolVal(Node):
+class Assignment(Node):
 
     def Evaluate(self, st):
 
-        parsed = int(self.value == True)
-        return (parsed, "BOOL")
+        r = "PUSH DWORD 0;\n"
+        c = self.children[0].Evaluate(st)
+        offset = st.set(self.value, c[1])
+        r += c[0]
+        r += f"MOV [EBP-{offset}], EBX;\n"
 
-
-class ReadLine(Node):
-
-    def Evaluate(self, st):
-        return (int(input()), "INT")
+        return (r, c[1])
 
 
 class Identifier(Node):
 
     def Evaluate(self, st):
-        return st.get(self.value)
+        get = st.get(self.value)
+        offset = get[1]
+        r = f"""MOV EBX, [EBP-{offset}];\n"""
+        return (r, get[0])
+
+
+class IntVal(Node):
+
+    def Evaluate(self, st):
+        return (f"MOV EBX, ${self.value};\n", "BOOL")
 
 
 class StringVal(Node):
     def Evaluate(self, st):
-        return (self.value, "STRING")
+        return (f"MOV EBX, ${0};\n", "BOOL")
+
+
+class BoolVal(Node):
+
+    def Evaluate(self, st):
+        parsed = int(self.value == True)
+        return (f"MOV EBX, ${parsed};\n", "BOOL")
 
 
 class Commands(Node):
-
     def Evaluate(self, st):
+
+        r = ""
         for child in self.children:
-            child.Evaluate(st)
+            r += child.Evaluate(st)[0]
+
+        return (r, None)

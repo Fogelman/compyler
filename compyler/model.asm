@@ -63,15 +63,25 @@ binop_jg:
   JG binop_true
   JMP binop_false
 
+binop_jge:
+  JGE binop_true
+  JMP binop_false
+
 binop_jl:
   JL binop_true
+  JMP binop_false
+
+binop_jle:
+  JLE binop_true
   JMP binop_false
 
 binop_false:
   MOV EBX, False
   JMP binop_exit
+
 binop_true:
   MOV EBX, True
+
 binop_exit:
   RET
 
@@ -82,8 +92,3 @@ _start:
 
   ; codigo gerado pelo compilador
 
-
-  ; interrupcao de saida
-  POP EBP
-  MOV EAX, 1
-  INT 0x80

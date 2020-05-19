@@ -1,13 +1,25 @@
 
 
 class SymbolTable:
-    def __init__(self, symbols=None):
+    def __init__(self, symbols=None, offset=0):
+        self.offset = offset
         self.symbols = symbols
+
+        self.dsize = {
+            "INT": 4,
+            "BOOL": 4
+        }
         if symbols is None:
             self.symbols = {}
 
     def set(self, key, value):
-        self.symbols[key] = value
+
+        if self.symbols.__contains__(key):
+            return self.symbols[key]
+
+        self.offset += self.dsize[value]
+        self.symbols[key] = [value, self.offset]
+        return self.offset
 
     def get(self, key):
         return self.symbols[key]
