@@ -99,6 +99,8 @@ MOV EBX, [EBP-4];
 PUSH EBX; Empilhe os argumentos
 CALL print; Chamada da função
 POP EBX; Desempilhe os argumentos
+MOV EBX, [EBP-4];
+PUSH EBX ; empilha f
 MOV EBX, $3;
 POP EAX ;
 CMP EAX, EBX;
@@ -118,6 +120,7 @@ CALL print; Chamada da função
 POP EBX; Desempilhe os argumentos
 
 IF_EXIT_13:
+
 
 ; interrupcao de saida
 POP EBP

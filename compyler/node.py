@@ -81,7 +81,7 @@ class BinOp(Node):
 
         result = l[0]
         result += "PUSH EBX ; empilha f\n"
-        result = r[0]
+        result += r[0]
         result += "POP EAX ;\n"
         result += operation["function"]
 
@@ -124,7 +124,7 @@ JE IF_{self.id} ; vai para o if
 JMP IF_EXIT_{self.id}
 IF_{self.id}:
 {self.children[2].Evaluate(st)[0]}
-IF_EXIT_{self.id}:\n"""
+IF_EXIT_{self.id}:\n\n"""
         return (r, None)
 
 
