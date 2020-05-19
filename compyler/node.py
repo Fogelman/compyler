@@ -118,7 +118,7 @@ class If(Node):
     def Evaluate(self, st):
 
         r = self.children[0].Evaluate(st)[0]
-        r += f"""CMP EBX, True ; verifica se o teste deu falso
+        r += f"""CMP EBX, False ; verifica se o teste deu falso
 JE IF_{self.id} ; vai para o if
 {self.children[1].Evaluate(st)[0]}
 JMP IF_EXIT_{self.id}
@@ -138,7 +138,7 @@ CMP EBX, False ; verifica se o teste deu falso
 JE EXIT_{self.id} ; e sai caso for igual a falso.
 {self.children[1].Evaluate(st)[0]}
 ; instruções do filho direito do while.
-JMP LOOP_34 ; volta para testar de novo
+JMP LOOP_{self.id} ; volta para testar de novo
 EXIT_{self.id}:\n\n""", None)
 
 
@@ -150,7 +150,7 @@ class Assignment(Node):
         c = self.children[0].Evaluate(st)
         offset = st.set(self.value, c[1])
         r += c[0]
-        r += f"MOV [EBP-{offset}], EBX;\n"
+        r += f"MOV [EBP-{offset[1]}], EBX;\n"
 
         return (r, c[1])
 

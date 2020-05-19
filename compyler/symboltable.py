@@ -19,7 +19,7 @@ class SymbolTable:
 
         self.offset += self.dsize[value]
         self.symbols[key] = [value, self.offset]
-        return self.offset
+        return self.symbols[key]
 
     def get(self, key):
         return self.symbols[key]
