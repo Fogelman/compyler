@@ -1,10 +1,11 @@
 test:
 	pytest ./tests
 
-compile:
-	python main.py program.php program.asm
-	nasm -f elf32 -F dwarf -g program.asm
-	ld -m elf_i386 -o program program.o
+pre-run:
+	mkdir -p build
+	python main.py program.php ./build/program.asm
+	nasm -f elf32 -F dwarf -g ./build/program.asm -o ./build/program.o
+	ld -m elf_i386 -o ./build/program ./build/program.o
 
-run:
-	./program
+run: pre-run
+	./build/program

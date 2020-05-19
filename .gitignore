@@ -147,3 +147,9 @@ dmypy.json
 # Ignore local tests PHP
 
 *.php
+*.asm
+*.o
+
+build/
+
+!compyler/model.asm
