@@ -33,9 +33,9 @@ class NoOp(Node):
 class UnOp(Node):
 
     op_map = {
-        "+": lambda a: +a,
-        "-": lambda a: -a,
-        "NOT": lambda a: not a
+        "+": "",
+        "-": "NEG EBX\n",
+        "NOT": "XOR EBX, EBX\n"
     }
 
     def Evaluate(self, st):
@@ -46,12 +46,8 @@ class UnOp(Node):
             raise SyntaxError(
                 f"Cannot apply operation to variable of type {child[1]}")
 
-        result = self.op_map[self.value](child[0])
-
-        if self.value == "NOT":
-            result = int(result)
-            return (result, "BOOL")
-
+        result = child[0]
+        result += self.op_map[self.value]
         return (result, child[1])
 
 
@@ -85,13 +81,9 @@ class BinOp(Node):
         result += "POP EAX ;\n"
         result += operation["function"]
 
-        # error |= ((l[1] == "STRING" and r[1] != "STRING") or (
-        #     l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
         error |= l[1] not in operation["types"] or r[1] not in operation["types"]
         if error:
             raise Exception(f"Type {l[1]} and {r[1]} cannot be operated")
-
-        # result = operation["function"](l[0], r[0])
 
         return (result, operation["result"])
 
@@ -161,7 +153,7 @@ class Identifier(Node):
     def Evaluate(self, st):
         get = st.get(self.value)
         offset = get[1]
-        r = f"""MOV EBX, [EBP-{offset}]\n"""
+        r = f"MOV EBX, [EBP-{offset}]\n"
         return (r, get[0])
 
 
