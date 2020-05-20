@@ -27,7 +27,7 @@ class Node(ABC):
 class NoOp(Node):
 
     def Evaluate(self, st):
-        pass
+        return ("", None)
 
 
 class UnOp(Node):
