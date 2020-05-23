@@ -2,26 +2,7 @@
 from compyler import _run
 code = """
 
-
-def fibbonacci(n) {
-   if(n == 0){
-      return 0
-   } else{
-        if(n == 1) {
-            return 1
-        } else {
-            return (fibbonacci(n-1) + fibbonacci(n-2))
-        }
-   }
-}
-
-def test(){
-    print(1)
-}
-
-test()
-c  = fibbonacci(10)
-print(c)
+a fifty-fifty 5
 """
 result = _run(code)
 

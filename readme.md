@@ -43,6 +43,8 @@ compyler/
 
 ### References
 
+[Pykaleidoscope](https://github.com/eliben/pykaleidoscope)
+
 [Using RPython and RPly to build a language interpreter](https://joshsharp.com.au/blog/rpython-rply-interpreter-1.html)
 
 [Writing your own programming language and compiler with Python](https://blog.usejournal.com/writing-your-own-programming-language-and-compiler-with-python-a468970ae6df)
