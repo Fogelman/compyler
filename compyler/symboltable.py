@@ -22,7 +22,9 @@ class SymbolTable:
         if st.symbols.__contains__(key):
             raise Exception("Function already declared")
 
-    def getfunc(self, key, value):
+        st.set(key, value)
+
+    def getfunc(self, key):
         st = self
         while st.parent is not None:
             st = st.parent
@@ -30,8 +32,18 @@ class SymbolTable:
         if not st.symbols.__contains__(key):
             raise Exception("Function not declared")
 
+        return st.get(key)
+
     def set(self, key, value):
         self.symbols[key] = value
 
     def get(self, key):
         return self.symbols[key]
+
+    def contains(self, key):
+        if self.symbols.__contains__(key):
+            return self.symbols[key]
+        elif self.parent:
+            return self.parent.contains(key)
+
+        return False

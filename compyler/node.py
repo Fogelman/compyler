@@ -155,7 +155,7 @@ class Commands(Node):
     def Evaluate(self, st):
         for child in self.children:
             child.Evaluate(st)
-            if type(child) is Return:
+            if st.contains("RETURN"):
                 return st.get("RETURN")
         return None
 
@@ -178,7 +178,7 @@ class FuncCall(Node):
         parent = st
         st = SymbolTable(parent=parent)
         arguments = self.children
-        function = parent.getfunc(self.value)
+        function = parent.getfunc(self.value)[0]
 
         if len(arguments) != len(function.arguments):
             raise Exception(

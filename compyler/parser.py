@@ -1,5 +1,5 @@
 from compyler.tokenizer import Tokenizer
-from compyler.node import BinOp, UnOp, IntVal, BoolVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine, StringVal
+from compyler.node import BinOp, UnOp, IntVal, BoolVal, NoOp, Identifier, Assignment, Commands, Echo, NoOp, If, While, ReadLine, StringVal, FuncDec, FuncCall, Return
 
 
 class Parser:
@@ -7,7 +7,42 @@ class Parser:
 
     @staticmethod
     def parseArgs():
-        pass
+        tokens = Parser.tokens
+        args = []
+
+        if tokens.actual.type == "IDENTIFIER":
+            args.append(tokens.actual.value)
+            tokens.selectNext()
+
+            while tokens.actual.type == "COMMA":
+                tokens.selectNext()
+                if tokens.actual.type != "IDENTIFIER":
+                    raise Exception("[-] unexpected token.")
+                args.append(tokens.actual.value)
+                tokens.selectNext()
+
+        elif tokens.actual.type == "CLOSE":
+            return args
+        else:
+            raise Exception("[-] unexpected token.")
+
+        return args
+
+    @staticmethod
+    def parseCall():
+        tokens = Parser.tokens
+        args = []
+
+        name = tokens.actual.value
+        tokens.selectNext()
+        while tokens.actual.type != "CLOSE":
+            args.append(Parser.parseRelationalExpression())
+
+        if(tokens.actual.type != "CLOSE"):
+            raise Exception("[-] unexpected token.")
+        tokens.selectNext()
+
+        return FuncCall(name, args)
 
     @staticmethod
     def parseProgram():
@@ -54,6 +89,15 @@ class Parser:
             tokens.selectNext()
             result = Echo(value, [Parser.parseRelationalExpression()])
 
+        elif tokens.actual.value == "RETURN":
+            value = tokens.actual.value
+            tokens.selectNext()
+            result = Return(value, [Parser.parseRelationalExpression()])
+
+        elif tokens.actual.type == "CALL":
+
+            result = Parser.parseCall()
+
         elif tokens.actual.value == "IF":
             tokens.selectNext()
             if tokens.actual.type == "OPEN":
@@ -87,16 +131,17 @@ class Parser:
             else:
                 raise Exception("[-] unexpected token.")
 
-        elif tokens.actual.value == "FUNCTION":
+        elif tokens.actual.type == "FUNCTION":
+            name = tokens.actual.value
             tokens.selectNext()
             if tokens.actual.type == "OPEN":
                 tokens.selectNext()
-                relexpr = Parser.parseRelationalExpression()
+                args = Parser.parseArgs()
                 if(tokens.actual.type != "CLOSE"):
                     raise Exception("[-] unexpected token.")
                 tokens.selectNext()
                 command = Parser.parseCommand()
-                return While(None, [relexpr, command])
+                return FuncDec(name, [args, command])
             else:
                 raise Exception("[-] unexpected token.")
 
@@ -151,6 +196,9 @@ class Parser:
         elif tokens.actual.type == "STRING":
             result = StringVal(tokens.actual.value)
             tokens.selectNext()
+
+        elif tokens.actual.type == "CALL":
+            result = Parser.parseCall()
         else:
             raise Exception("[-] unexpected token.")
 

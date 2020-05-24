@@ -29,16 +29,20 @@ class Tokenizer:
         self.actual = actual
         self._lenght = len(origin)
         self.reserved = re.compile(
-            r"^(\becho)|^(\bwhile)|^(\bif)|^(\breadline)|^(\bfunction)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
+            r"^(\becho)|^(\bwhile)|^(\breturn)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
 
         self.boolean = re.compile(r"^(\btrue)|^(\bfalse)", re.IGNORECASE)
 
         self.tags = re.compile(r"^(\<\?php)|^(\?\>)")
-
         self.string = re.compile(r"^(\"[^\"]*\")")
+        self.function = re.compile(r"^(\bfunction)\ [a-z]+[_a-z0-9]*",
+                                   re.IGNORECASE)
+        self.call = re.compile(r"^[a-z]+[_a-z0-9]*\ *?\(",
+                               re.IGNORECASE)
 
     def _find(self, pattern, flags=0, error=True):
-        match = pattern.match(self.origin[self.position:], flags)
+        text = self.origin[self.position:]
+        match = pattern.match(text, flags)
 
         if match is None and error:
             raise Exception(
@@ -85,6 +89,14 @@ class Tokenizer:
             string = self._find(self.string)
             self.actual = Token(string[1:-1], "STRING")
             self.position += 2
+        elif self._check(self.function):
+            string = self._find(self.function)
+            self.position += 9
+            self.actual = Token(string[9:], "FUNCTION")
+        elif self._check(self.call):
+            string = self._find(self.call)
+            self.position += 1
+            self.actual = Token(string[:-1], "CALL")
         elif self.origin[self.position] in tokens:
             actual = self.origin[self.position]
             self.actual = Token(actual, tokens[actual])
