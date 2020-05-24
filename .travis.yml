@@ -1,16 +1,6 @@
+dist: bionic
 language: python
 python: 3.8
-
-os:
-  - linux
-  dist: bionic
-  - osx
-  - windows
-
-jobs:
-  allow_failures:
-    - os: windows
-
 
 compiler:
   - gcc
