@@ -20,12 +20,13 @@ class Assembler(object):
 
     def _config(self):
         self.module = ir.Module(name=__file__)
-        ty = ir.FunctionType(ir.VoidType(), [])
+        # self.module.triple = self.binding.get_default_triple()
+        ty = ir.FunctionType(ir.VoidType(), [], False)
         func = ir.Function(self.module, ty, name="main")
         block = func.append_basic_block(name="entry")
         self.builder = ir.IRBuilder(block)
 
-    def Evaluate(self, ast, st, optimize=False, llvmdump=False):
+    def Evaluate(self, ast, st, optimize=False, llvmdump=True):
         """Evaluate code in ast.
 
         Returns None for definitions and externs, and the evaluated expression
@@ -35,6 +36,7 @@ class Assembler(object):
 
         context = Context(st, self.builder, self.module)
         ast.Evaluate(context)
+        self.builder.ret_void()
 
         if llvmdump:
             print('======== Unoptimized LLVM IR')

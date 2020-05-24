@@ -3,7 +3,9 @@ from compyler import _run
 code = """
 
 a fifty-fifty 5
-return
+b fifty-fifty 155
+
+
 """
 result = _run(code)
 
