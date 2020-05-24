@@ -1,4 +1,5 @@
 # https://joshsharp.com.au/blog/rpython-rply-interpreter-1.html
+import sys
 from compyler import _run
 code = r"""
 hmmm fibbonacci(n) {
@@ -12,12 +13,12 @@ hmmm fibbonacci(n) {
      }}
 return 0
 }
- c  fifty-fifty fibbonacci(50) 
+ c  fifty-fifty fibbonacci(35) 
  print(c)
 
 """
 result = _run(code)
 
-
+sys.stdout = open('file.txt', 'w')
 with open("output.o", "wb") as file:
     file.write(result)

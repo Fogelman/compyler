@@ -45,13 +45,6 @@ class Assembler(object):
             print('======== Unoptimized LLVM IR')
             print(str(self.module))
 
-        # If we're evaluating a definition or extern declaration, don't do
-        # anything else. If we're evaluating an anonymous wrapper for a toplevel
-        # expression, JIT-compile the module and run the function to get its
-        # result.
-        # if not (isinstance(ast, FunctionAST) and ast.is_anonymous()):
-        #     return None
-
         # Convert LLVM IR into in-memory representation
         llvmmod = llvm.parse_assembly(str(self.module))
         # Optimize the module
@@ -87,16 +80,10 @@ class Assembler(object):
         The object file is created for the native target, and its contents are
         returned as a bytes object.
         """
-        # We use the small code model here, rather than the default one
-        # `jitdefault`.
-        #
-        # The reason is that only ELF format is supported under the `jitdefault`
-        # code model on Windows. However, COFF is commonly used by compilers on
-        # Windows.
-        #
-        # Please refer to https://github.com/numba/llvmlite/issues/181
-        # for more information about this issue.
-        target_machine = self.target.create_target_machine(codemodel='small')
+        # Use `small` if 'jitdefault' does not work.
+
+        target_machine = self.target.create_target_machine(
+            codemodel='jitdefault')
 
         # Convert LLVM IR into in-memory representation
         llvmmod = llvm.parse_assembly(str(self.module))
@@ -117,5 +104,5 @@ class Assembler(object):
         ty = ir.FunctionType(ir.IntType(32), [int8], var_arg=True)
         printf = ir.Function(self.module, ty, name="printf")
 
-        self.env["ftm"] = global_fmt  # fmt_arg
+        self.env["ftm"] = global_fmt
         self.env["printf"] = printf

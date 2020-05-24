@@ -5,6 +5,9 @@ python: 3.8
 git:
   depth: 1
 
+branches:
+  except:
+    - APS2
 install:
   - pip install -r requirements.txt
 

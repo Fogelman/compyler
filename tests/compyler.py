@@ -25,7 +25,7 @@ def finput(inputs):
 
 
 @pytest.mark.parametrize("code, expect, inputs", tests)
-def test_result(code, expect, inputs, capsys, monkeypatch):
+def test_result(code, expect, inputs, capfd, monkeypatch):
     generator = finput(inputs)
     def mock(text=None): return next(generator)
     with monkeypatch.context() as m:
@@ -35,5 +35,5 @@ def test_result(code, expect, inputs, capsys, monkeypatch):
                 _run(code)
         else:
             _run(code)
-            captured = capsys.readouterr()
+            captured = capfd.readouterr()
             assert captured.out == expect

@@ -34,23 +34,9 @@ class Context(object):
         env = self.env
         return Context(st, builder, module, env)
 
-    # def print(self):
-    #     int8 = ir.IntType(8).as_pointer()
-    #     fmt = "%i\n\0"
-    #     c_fmt = ir.Constant(ir.ArrayType(ir.IntType(8), len(fmt)),
-    #                         bytearray(fmt.encode("utf8")))
-    #     global_fmt = ir.GlobalVariable(self.module, c_fmt.type, name="fstr")
-    #     global_fmt.linkage = 'internal'
-    #     global_fmt.global_constant = True
-    #     global_fmt.initializer = c_fmt
-    #     fmt_arg = self.builder.bitcast(global_fmt, int8)
-
-    #     self.env["ftm"] = fmt_arg
-
     def declare(self, name):
         """Create an alloca in the entry BB of the current function."""
         int32 = ir.IntType(32)
-        # self.builder.position_at_start(self.builder.function.entry_basic_block)
         return self.builder.alloca(int32, name=name)
 
 
@@ -123,8 +109,6 @@ class NoOp(Node):
 class Assignment(Node):
 
     def Evaluate(self, context):
-        int32 = ir.IntType(32)
-
         addr = context.st.contains(self.value)
         if not addr:
             addr = context.declare(self.value)
@@ -208,14 +192,11 @@ class Commands(Node):
 class FuncAssignment(Node):
 
     def _create(self, context):
+        int32 = ir.IntType(32)
+        args, _ = self.children
+        ty = ir.FunctionType(int32, [int32 for i in range(len(args))])
         if self.value in context.module.globals:
 
-            int32 = ir.IntType(32)
-            args, _ = self.children
-            ty = ir.FunctionType(int32, [int32 for i in range(len(args))])
-
-            # We only allow the case in which a declaration exists and now the
-            # function is defined (or redeclared) with the same number of args.
             existing_func = context.module[self.value]
             if not isinstance(existing_func, ir.Function):
                 raise Exception('Function/Global name collision', self.value)
@@ -233,16 +214,13 @@ class FuncAssignment(Node):
     def Evaluate(self, parent):
 
         args, body = self.children
-        int32 = ir.IntType(32)
         context = parent.new()
-        ty = ir.FunctionType(int32, [int32 for i in range(len(args))])
-        func = ir.Function(context.module, ty, name=self.value)
+        func = self._create(context)
         block = func.append_basic_block('entry')
         context.builder = ir.IRBuilder(block)
 
         for i, arg in enumerate(func.args):
             arg.name = args[i]
-            # Verify if function contains type
             addr = context.declare(arg.name)
             context.builder.store(arg, addr)
             context.st.set(arg.name, addr)
