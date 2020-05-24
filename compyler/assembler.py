@@ -29,7 +29,7 @@ class Assembler(object):
         block = func.append_basic_block(name="entry")
         self.builder = ir.IRBuilder(block)
 
-    def Evaluate(self, ast, st, optimize=False, llvmdump=True):
+    def Evaluate(self, ast, st, optimize=True, llvmdump=False):
         """Evaluate code in ast.
 
         Returns None for definitions and externs, and the evaluated expression

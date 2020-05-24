@@ -12,7 +12,7 @@ hmmm fibbonacci(n) {
      }}
 return 0
 }
- c  fifty-fifty fibbonacci(10) 
+ c  fifty-fifty fibbonacci(50) 
  print(c)
 
 """

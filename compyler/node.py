@@ -264,20 +264,6 @@ class FuncCall(Node):
         call_args = [argument.Evaluate(context) for argument in arguments]
         return context.builder.call(func, call_args, 'calltmp')
 
-        # Ta errado aqui, precisa ser contexto e não st. Rever depois
-        # st = SymbolTable(None, parent.st)
-        # func = parent.st.get(self.value)
-
-        # if len(arguments) != len(func.arguments):
-        #     raise Exception(
-        #         'The amount of argument passed does not match function declaration')
-
-        # for i in range(len(arguments)):
-        #     evaled = arguments[i].Evaluate(parent)
-        #     st.set(func.arguments[i], evaled)
-
-        # return func.suite.Evaluate(st)
-
 
 class Return(Node):
     def Evaluate(self, context):
