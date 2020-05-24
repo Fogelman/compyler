@@ -27,6 +27,13 @@ class Context(object):
         self.module = module
         self.env = env
 
+    def new(self):
+        st = SymbolTable(parent=self.st)
+        builder = self.builder
+        module = self.module
+        env = self.env
+        return Context(st, builder, module, env)
+
     def declare(self, name):
         """Create an alloca in the entry BB of the current function."""
         int32 = ir.IntType(32)
@@ -107,7 +114,7 @@ class Assignment(Node):
 
         addr = context.st.contains(self.value)
         if not addr:
-            addr = context.builder.alloca(int32, name=self.value)
+            addr = context.declare(self.value)
 
         x = self.children[0].Evaluate(context)
         context.builder.store(x, addr)
@@ -183,11 +190,25 @@ class Commands(Node):
 
 
 class FuncAssignment(Node):
-    def Evaluate(self, context):
-        context.st.set(self.value,
-                       FunctionSymbol(
-                           self.children[0],
-                           self.children[1]))
+    def Evaluate(self, parent):
+
+        args, body = self.children
+        int32 = ir.IntType(32)
+        context = parent.new()
+        ty = ir.FunctionType(int32, [int32 for i in range(len(args))])
+        func = ir.Function(context.module, ty, name=self.value)
+        block = func.append_basic_block('entry')
+        context.builder = ir.IRBuilder(block)
+
+        for i, arg in enumerate(func.args):
+            arg.name = args[i]
+            # Verify if function contains type
+            addr = context.declare(arg.name)
+            context.builder.store(arg, addr)
+            context.st.set(arg.name, addr)
+
+        body.Evaluate(context)
+        return func
 
 
 class FuncCall(Node):

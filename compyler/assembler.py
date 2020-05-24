@@ -29,7 +29,7 @@ class Assembler(object):
         block = func.append_basic_block(name="entry")
         self.builder = ir.IRBuilder(block)
 
-    def Evaluate(self, ast, st, optimize=False, llvmdump=False):
+    def Evaluate(self, ast, st, optimize=False, llvmdump=True):
         """Evaluate code in ast.
 
         Returns None for definitions and externs, and the evaluated expression
@@ -57,7 +57,7 @@ class Assembler(object):
         # Optimize the module
         if optimize:
             pmb = llvm.create_pass_manager_builder()
-            pmb.opt_level = 2
+            pmb.opt_level = 3
             pm = llvm.create_module_pass_manager()
             pmb.populate(pm)
             pm.run(llvmmod)
@@ -120,6 +120,13 @@ class Assembler(object):
 
         ty = ir.FunctionType(ir.IntType(32), [int8], var_arg=True)
         printf = ir.Function(self.module, ty, name="printf")
+
+        # putchard_ty = ir.FunctionType(ir.DoubleType(), [ir.DoubleType()])
+        # putchard = ir.Function(self.module, putchard_ty, 'putchard')
+        # builder = ir.IRBuilder(putchard.append_basic_block('entry'))
+        # ival = builder.fptoui(putchard.args[0], ir.IntType(32), 'intcast')
+        # builder.call(putchar, [ival])
+        # builder.ret(ir.Constant(ir.DoubleType(), 0))
 
         self.env["ftm"] = fmt_arg
         self.env["printf"] = printf
