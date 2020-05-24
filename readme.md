@@ -1,8 +1,8 @@
 # compyler
 
-A revolutionary language to make your life harder
+A revolutionary language to make your life harder. Implemented with `rply` + `llvmlite`
 
-[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=APS)](https://travis-ci.com/Fogelman/compyler)
+[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=APS2)](https://travis-ci.com/Fogelman/compyler)
 
 ### Requirements
 
@@ -35,6 +35,7 @@ The EBNF can be found at `./ebnf.md`
 ```
 compyler/
 ├── __init__.py
+├── assembler.py
 ├── lexer.py
 ├── node.py
 ├── parser.py
@@ -44,6 +45,8 @@ compyler/
 ### References
 
 [Pykaleidoscope](https://github.com/eliben/pykaleidoscope)
+
+[Printf implementation](https://gist.github.com/alendit/defe3d518cd8f3f3e28cb46708d4c9d6#file-call_printf-py-L35)
 
 [Using RPython and RPly to build a language interpreter](https://joshsharp.com.au/blog/rpython-rply-interpreter-1.html)
 
