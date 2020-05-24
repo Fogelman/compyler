@@ -539,5 +539,10 @@
     "input": [
       "blabla,eu sou uma string de input, deveria dar erro "
     ]
+  },
+  {
+    "code": "<?php\n1;?>\n",
+    "expect": null,
+    "input": []
   }
 ]

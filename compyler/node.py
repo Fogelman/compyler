@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 
 import operator as op
-# from symboltable import SymbolTable
+from compyler.symboltable import FunctionSymbol, SymbolTable
 
 
 class Node(ABC):
@@ -43,7 +43,6 @@ class BinOp(Node):
 
         error = False
 
-        # error |= self.value == "." and l[1] != "STRING"
         # Verify  operation PHP
         error |= ((l[1] == "STRING" and r[1] != "STRING") or (
             l[1] != "STRING" and r[1] == "STRING")) and self.value != "."
@@ -97,8 +96,10 @@ class NoOp(Node):
 class Assignment(Node):
 
     def Evaluate(self, st):
-        a = self.children[0].Evaluate(st)
-        st.set(self.value, a)
+        value = self.children[0].Evaluate(st)
+        if value is None:
+            raise Exception("Cannot assign null to variable")
+        st.set(self.value, value)
 
 
 class Echo(Node):
@@ -154,3 +155,37 @@ class Commands(Node):
     def Evaluate(self, st):
         for child in self.children:
             child.Evaluate(st)
+            if type(child) is Return:
+                return st.get("RETURN")
+        return None
+
+
+class Return(Node):
+    def Evaluate(self, st):
+        st.set("RETURN", self.children[0].Evaluate(st))
+
+
+class FuncDec(Node):
+
+    def Evaluate(self, st):
+        st.setfunc(self.value, [FunctionSymbol(
+            self.value, self.children[0], self.children[1]), "FUNCTION"])
+
+
+class FuncCall(Node):
+
+    def Evaluate(self, st):
+        parent = st
+        st = SymbolTable(parent=parent)
+        arguments = self.children
+        function = parent.getfunc(self.value)
+
+        if len(arguments) != len(function.arguments):
+            raise Exception(
+                'The amount of argument passed does not match function declaration')
+
+        for i in range(len(arguments)):
+            evaluated = arguments[i].Evaluate(parent)
+            st.set(function.arguments[i], evaluated)
+
+        return function.suite.Evaluate(st)
