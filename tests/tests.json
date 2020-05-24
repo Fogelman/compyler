@@ -102,26 +102,17 @@
   {
     "code": "<?php{$a = readline();echo $a;$b = rEaDLIne();echo $b;}?>",
     "expect": "1\n2\n",
-    "input": [
-      1,
-      2
-    ]
+    "input": [1, 2]
   },
   {
     "code": "<?php{$a = readline();$b = rEaDLIne();$c=$a*$b;if($c > 50 and $c<150){echo $c;}}?>",
     "expect": "100\n",
-    "input": [
-      25,
-      4
-    ]
+    "input": [25, 4]
   },
   {
     "code": "<?php{$a = readline();$b = rEaDLIne();$c=10*$a*$b;if(($c>10000) or ($c<100)){echo $c;}}?>",
     "expect": "",
-    "input": [
-      25,
-      4
-    ]
+    "input": [25, 4]
   },
   {
     "code": "<?php{$a=49;$b=48;if($a == ($b+1)){echo $a*$b;}ElSe{echo 0;}}?>",
@@ -386,32 +377,22 @@
   {
     "code": "<?php\n{\n    $x = readline();\n    echo $x;\n}\n?>",
     "expect": "42\n",
-    "input": [
-      42
-    ]
+    "input": [42]
   },
   {
     "code": "<?php\n{\n    $x = readline();\n    $x = readline();\n    echo $x;\n}\n?>",
     "expect": "8\n",
-    "input": [
-      2,
-      8
-    ]
+    "input": [2, 8]
   },
   {
     "code": "<?php\n{\n    $x = readline();\n    $y = $x*2;\n    echo $y;\n}\n?>",
     "expect": "84\n",
-    "input": [
-      42
-    ]
+    "input": [42]
   },
   {
     "code": "<?php\n{\n    $x = readline();\n    $y = readline();\n    echo $x+$y;\n}\n?>",
     "expect": "9\n",
-    "input": [
-      5,
-      4
-    ]
+    "input": [5, 4]
   },
   {
     "code": "<?php\n{\n    if (true){\n        echo 1;\n    }\n}\n?>",
@@ -536,13 +517,16 @@
   {
     "code": "<?php\n{\n    $x = readline();\n    echo $x;\n}?>\n",
     "expect": null,
-    "input": [
-      "blabla,eu sou uma string de input, deveria dar erro "
-    ]
+    "input": ["blabla,eu sou uma string de input, deveria dar erro "]
   },
   {
     "code": "<?php\n1;?>\n",
     "expect": null,
+    "input": []
+  },
+  {
+    "code": "<?php\nfunction main($x){\n    if ($x < 1){\n        return 0;\n    }\n    if($x == 1){\n        return 1;\n    }\n    return main($x - 1) + main($x - 2);\n}\n$a = main(10);\necho $a;\n?>",
+    "expect": "55\n",
     "input": []
   }
 ]
