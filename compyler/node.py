@@ -104,9 +104,12 @@ class NoOp(Node):
 class Assignment(Node):
 
     def Evaluate(self, context):
-        block = context.builder.block
-        addr = context.declare(self.value)
-        context.builder.position_at_end(block)
+        int32 = ir.IntType(32)
+
+        addr = context.st.contains(self.value)
+        if not addr:
+            addr = context.builder.alloca(int32, name=self.value)
+
         x = self.children[0].Evaluate(context)
         context.builder.store(x, addr)
         context.st.set(self.value, addr)
@@ -117,7 +120,7 @@ class Identifier(Node):
     def Evaluate(self, context):
 
         addr = context.st.get(self.value)
-        return context.builder.load(addr, self.value)
+        return context.builder.load(addr)
 
 
 class Print(Node):
@@ -149,8 +152,19 @@ class If(Node):
 class While(Node):
 
     def Evaluate(self, context):
-        while self.children[0].Evaluate(context.st):
-            self.children[1].Evaluate(context.st)
+        int32 = ir.IntType(32)
+        loop = context.builder.function.append_basic_block('loop')
+        context.builder.branch(loop)
+        context.builder.position_at_start(loop)
+        self.children[1].Evaluate(context)
+        endcond = self.children[0].Evaluate(context)
+        cmp = context.builder.icmp_signed(
+            '!=', endcond, ir.Constant(int32, 0),
+            'loopcond')
+
+        after = context.builder.function.append_basic_block('afterloop')
+        context.builder.cbranch(cmp, loop, after)
+        context.builder.position_at_start(after)
 
 
 class ReadLine(Node):
