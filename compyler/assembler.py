@@ -15,28 +15,25 @@ class Assembler(object):
         llvm.initialize_native_asmprinter()
         self._config()
 
-        self.module = ir.Module()
-        self.builder = None
-        self.func_symtab = {}
-
-        self._add_builtins(self.module)
+        self._add_builtins()
         self.target = llvm.Target.from_default_triple()
 
     def _config(self):
         self.module = ir.Module(name=__file__)
-        tp = ir.FunctionType(ir.VoidType(), [])
-        func = ir.Function(self.module, tp, name="main")
+        ty = ir.FunctionType(ir.VoidType(), [])
+        func = ir.Function(self.module, ty, name="main")
         block = func.append_basic_block(name="entry")
         self.builder = ir.IRBuilder(block)
 
-    def Evaluate(self, ast, st=None, optimize=True, llvmdump=False):
+    def Evaluate(self, ast, st, optimize=False, llvmdump=False):
         """Evaluate code in ast.
 
         Returns None for definitions and externs, and the evaluated expression
         value for toplevel expressions.
         """
         # Parse the given code and generate code from it
-        context = Context(self.builder, self.module, {})
+
+        context = Context(st, self.builder, self.module)
         ast.Evaluate(context)
 
         if llvmdump:
@@ -76,7 +73,7 @@ class Assembler(object):
                 print('======== Machine code')
                 print(target_machine.emit_assembly(llvmmod))
 
-            fptr = CFUNCTYPE(c_double)(ee.get_function_address(ast.proto.name))
+            fptr = CFUNCTYPE(c_double)(ee.get_function_address("main"))
             result = fptr()
             return result
 
@@ -101,7 +98,8 @@ class Assembler(object):
         llvmmod = llvm.parse_assembly(str(self.module))
         return target_machine.emit_object(llvmmod)
 
-    def _add_builtins(self, module):
+    def _add_builtins(self):
+        pass
         # The C++ tutorial adds putchard() simply by defining it in the host C++
         # code, which is then accessible to the JIT. It doesn't work as simply
         # for us; but luckily it's very easy to define new "C level" functions
@@ -109,13 +107,13 @@ class Assembler(object):
         # this method does.
 
         # Add the declaration of putchar
-        putchar_ty = ir.FunctionType(ir.IntType(32), [ir.IntType(32)])
-        putchar = ir.Function(module, putchar_ty, 'putchar')
+        # putchar_ty = ir.FunctionType(ir.IntType(32), [ir.IntType(32)])
+        # putchar = ir.Function(self.module, putchar_ty, 'putchar')
 
         # Add putchard
-        putchard_ty = ir.FunctionType(ir.DoubleType(), [ir.DoubleType()])
-        putchard = ir.Function(module, putchard_ty, 'putchard')
-        irbuilder = ir.IRBuilder(putchard.append_basic_block('entry'))
-        ival = irbuilder.fptoui(putchard.args[0], ir.IntType(32), 'intcast')
-        irbuilder.call(putchar, [ival])
-        irbuilder.ret(ir.Constant(ir.DoubleType(), 0))
+        # putchard_ty = ir.FunctionType(ir.DoubleType(), [ir.DoubleType()])
+        # putchard = ir.Function(self.module, putchard_ty, 'putchard')
+        # builder = ir.IRBuilder(putchard.append_basic_block('entry'))
+        # ival = builder.fptoui(putchard.args[0], ir.IntType(32), 'intcast')
+        # builder.call(putchar, [ival])
+        # builder.ret(ir.Constant(ir.DoubleType(), 0))
