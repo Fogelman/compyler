@@ -18,8 +18,8 @@ class Assembler(object):
 
         self.env = dict()
         self.module = ir.Module(name=__file__)
+        self._headers()
         self._main()
-        self._add_builtins()
         self.target = llvm.Target.from_default_triple()
 
     def _main(self):
@@ -102,13 +102,10 @@ class Assembler(object):
         llvmmod = llvm.parse_assembly(str(self.module))
         return target_machine.emit_object(llvmmod)
 
-    def _add_builtins(self):
-        # The C++ tutorial adds putchard() simply by defining it in the host C++
-        # code, which is then accessible to the JIT. It doesn't work as simply
-        # for us; but luckily it's very easy to define new "C level" functions
-        # for our JITed code to use - just emit them as LLVM IR. This is what
-        # this method does.
+    def _headers(self):
+
         int8 = ir.IntType(8).as_pointer()
+
         fmt = "%i\n\0"
         c_fmt = ir.Constant(ir.ArrayType(ir.IntType(8), len(fmt)),
                             bytearray(fmt.encode("utf8")))
@@ -116,29 +113,9 @@ class Assembler(object):
         global_fmt.linkage = 'internal'
         global_fmt.global_constant = True
         global_fmt.initializer = c_fmt
-        fmt_arg = self.builder.bitcast(global_fmt, int8)
 
         ty = ir.FunctionType(ir.IntType(32), [int8], var_arg=True)
         printf = ir.Function(self.module, ty, name="printf")
 
-        # putchard_ty = ir.FunctionType(ir.DoubleType(), [ir.DoubleType()])
-        # putchard = ir.Function(self.module, putchard_ty, 'putchard')
-        # builder = ir.IRBuilder(putchard.append_basic_block('entry'))
-        # ival = builder.fptoui(putchard.args[0], ir.IntType(32), 'intcast')
-        # builder.call(putchar, [ival])
-        # builder.ret(ir.Constant(ir.DoubleType(), 0))
-
-        self.env["ftm"] = fmt_arg
+        self.env["ftm"] = global_fmt  # fmt_arg
         self.env["printf"] = printf
-
-        # Add the declaration of putchar
-        # putchar_ty = ir.FunctionType(ir.IntType(32), [ir.IntType(32)])
-        # putchar = ir.Function(self.module, putchar_ty, 'putchar')
-
-        # Add putchard
-        # putchard_ty = ir.FunctionType(ir.DoubleType(), [ir.DoubleType()])
-        # putchard = ir.Function(self.module, putchard_ty, 'putchard')
-        # builder = ir.IRBuilder(putchard.append_basic_block('entry'))
-        # ival = builder.fptoui(putchard.args[0], ir.IntType(32), 'intcast')
-        # builder.call(putchar, [ival])
-        # builder.ret(ir.Constant(ir.DoubleType(), 0))

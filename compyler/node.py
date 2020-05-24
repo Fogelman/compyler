@@ -34,6 +34,19 @@ class Context(object):
         env = self.env
         return Context(st, builder, module, env)
 
+    # def print(self):
+    #     int8 = ir.IntType(8).as_pointer()
+    #     fmt = "%i\n\0"
+    #     c_fmt = ir.Constant(ir.ArrayType(ir.IntType(8), len(fmt)),
+    #                         bytearray(fmt.encode("utf8")))
+    #     global_fmt = ir.GlobalVariable(self.module, c_fmt.type, name="fstr")
+    #     global_fmt.linkage = 'internal'
+    #     global_fmt.global_constant = True
+    #     global_fmt.initializer = c_fmt
+    #     fmt_arg = self.builder.bitcast(global_fmt, int8)
+
+    #     self.env["ftm"] = fmt_arg
+
     def declare(self, name):
         """Create an alloca in the entry BB of the current function."""
         int32 = ir.IntType(32)
@@ -131,10 +144,13 @@ class Identifier(Node):
 
 class Print(Node):
     def Evaluate(self, context):
+        int8 = ir.IntType(8).as_pointer()
+
         printf = context.env["printf"]
         ftm = context.env["ftm"]
+        arg = context.builder.bitcast(ftm, int8)
         result = self.children[0].Evaluate(context)
-        context.builder.call(printf, [ftm, result])
+        context.builder.call(printf, [arg, result])
 
 
 class If(Node):
@@ -190,6 +206,30 @@ class Commands(Node):
 
 
 class FuncAssignment(Node):
+
+    def _create(self, context):
+        if self.value in context.module.globals:
+
+            int32 = ir.IntType(32)
+            args, _ = self.children
+            ty = ir.FunctionType(int32, [int32 for i in range(len(args))])
+
+            # We only allow the case in which a declaration exists and now the
+            # function is defined (or redeclared) with the same number of args.
+            existing_func = context.module[self.value]
+            if not isinstance(existing_func, ir.Function):
+                raise Exception('Function/Global name collision', self.value)
+            if not existing_func.is_declaration():
+                raise Exception('Redifinition of {0}'.format(self.value))
+            if len(existing_func.function_type.args) != len(ty.args):
+                raise Exception(
+                    'Redifinition with different number of arguments')
+            func = context.module.globals[self.value]
+        else:
+            # Otherwise create a new function
+            func = ir.Function(context.module, ty, self.value)
+        return func
+
     def Evaluate(self, parent):
 
         args, body = self.children
@@ -212,21 +252,31 @@ class FuncAssignment(Node):
 
 
 class FuncCall(Node):
-    def Evaluate(self, parent):
-        # Ta errado aqui, precisa ser contexto e não st. Rever depois
-        st = SymbolTable(None, parent.st)
-        func = parent.st.get(self.value)
+    def Evaluate(self, context):
+
         arguments = self.children
+        func = context.module.get_global(self.value)
+        if func is None or not isinstance(func, ir.Function):
+            raise Exception('Call to unknown function', self.value)
+        if len(func.args) != len(arguments):
+            raise Exception('Call argument length mismatch', self.value)
 
-        if len(arguments) != len(func.arguments):
-            raise Exception(
-                'The amount of argument passed does not match function declaration')
+        call_args = [argument.Evaluate(context) for argument in arguments]
+        return context.builder.call(func, call_args, 'calltmp')
 
-        for i in range(len(arguments)):
-            evaled = arguments[i].Evaluate(parent)
-            st.set(func.arguments[i], evaled)
+        # Ta errado aqui, precisa ser contexto e não st. Rever depois
+        # st = SymbolTable(None, parent.st)
+        # func = parent.st.get(self.value)
 
-        return func.suite.Evaluate(st)
+        # if len(arguments) != len(func.arguments):
+        #     raise Exception(
+        #         'The amount of argument passed does not match function declaration')
+
+        # for i in range(len(arguments)):
+        #     evaled = arguments[i].Evaluate(parent)
+        #     st.set(func.arguments[i], evaled)
+
+        # return func.suite.Evaluate(st)
 
 
 class Return(Node):
