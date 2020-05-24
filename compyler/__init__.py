@@ -22,5 +22,5 @@ def _run(code):
     parser = Parser().build()
     ast = parser.parse(tokens)
     assembler = Assembler()
-
-    return assembler.Evaluate(ast, st)
+    assembler.Evaluate(ast, st)
+    return assembler.compile_to_object_code()

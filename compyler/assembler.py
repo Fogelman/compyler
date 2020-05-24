@@ -7,26 +7,29 @@ from ctypes import CFUNCTYPE, c_double
 from enum import Enum
 from compyler.node import Context
 
+# https://gist.github.com/alendit/defe3d518cd8f3f3e28cb46708d4c9d6
+
 
 class Assembler(object):
     def __init__(self):
         llvm.initialize()
         llvm.initialize_native_target()
         llvm.initialize_native_asmprinter()
-        self._config()
 
+        self.env = dict()
+        self.module = ir.Module(name=__file__)
+        self._main()
         self._add_builtins()
         self.target = llvm.Target.from_default_triple()
 
-    def _config(self):
-        self.module = ir.Module(name=__file__)
+    def _main(self):
         # self.module.triple = self.binding.get_default_triple()
         ty = ir.FunctionType(ir.VoidType(), [], False)
         func = ir.Function(self.module, ty, name="main")
         block = func.append_basic_block(name="entry")
         self.builder = ir.IRBuilder(block)
 
-    def Evaluate(self, ast, st, optimize=False, llvmdump=True):
+    def Evaluate(self, ast, st, optimize=True, llvmdump=False):
         """Evaluate code in ast.
 
         Returns None for definitions and externs, and the evaluated expression
@@ -34,7 +37,7 @@ class Assembler(object):
         """
         # Parse the given code and generate code from it
 
-        context = Context(st, self.builder, self.module)
+        context = Context(st, self.builder, self.module, self.env)
         ast.Evaluate(context)
         self.builder.ret_void()
 
@@ -51,7 +54,6 @@ class Assembler(object):
 
         # Convert LLVM IR into in-memory representation
         llvmmod = llvm.parse_assembly(str(self.module))
-
         # Optimize the module
         if optimize:
             pmb = llvm.create_pass_manager_builder()
@@ -65,7 +67,7 @@ class Assembler(object):
                 print(str(llvmmod))
 
         # Create a MCJIT execution engine to JIT-compile the module. Note that
-        # ee takes ownership of target_machine, so it has to be recreated anew
+        # ee takes ownership of target_machine, so it has to be recreated a new
         # each time we call create_mcjit_compiler.
         target_machine = self.target.create_target_machine()
         with llvm.create_mcjit_compiler(llvmmod, target_machine) as ee:
@@ -101,12 +103,26 @@ class Assembler(object):
         return target_machine.emit_object(llvmmod)
 
     def _add_builtins(self):
-        pass
         # The C++ tutorial adds putchard() simply by defining it in the host C++
         # code, which is then accessible to the JIT. It doesn't work as simply
         # for us; but luckily it's very easy to define new "C level" functions
         # for our JITed code to use - just emit them as LLVM IR. This is what
         # this method does.
+        int8 = ir.IntType(8).as_pointer()
+        fmt = "%i\n\0"
+        c_fmt = ir.Constant(ir.ArrayType(ir.IntType(8), len(fmt)),
+                            bytearray(fmt.encode("utf8")))
+        global_fmt = ir.GlobalVariable(self.module, c_fmt.type, name="fstr")
+        global_fmt.linkage = 'internal'
+        global_fmt.global_constant = True
+        global_fmt.initializer = c_fmt
+        fmt_arg = self.builder.bitcast(global_fmt, int8)
+
+        ty = ir.FunctionType(ir.IntType(32), [int8], var_arg=True)
+        printf = ir.Function(self.module, ty, name="printf")
+
+        self.env["ftm"] = fmt_arg
+        self.env["printf"] = printf
 
         # Add the declaration of putchar
         # putchar_ty = ir.FunctionType(ir.IntType(32), [ir.IntType(32)])

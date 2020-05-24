@@ -21,10 +21,11 @@ class Node(BaseBox, ABC):
 
 
 class Context(object):
-    def __init__(self, st, builder, module):
+    def __init__(self, st, builder, module, env=dict()):
         self.st = st
         self.builder = builder
         self.module = module
+        self.env = env
 
     def declare(self, name):
         """Create an alloca in the entry BB of the current function."""
@@ -121,29 +122,28 @@ class Identifier(Node):
 
 class Print(Node):
     def Evaluate(self, context):
-
-        result = self.children[0].Evaluate(context.st)
-        if type(result) is bool:
-            result = int(result)
-        print(result, end="\n")
+        printf = context.env["printf"]
+        ftm = context.env["ftm"]
+        result = self.children[0].Evaluate(context)
+        context.builder.call(printf, [ftm, result])
 
 
 class If(Node):
 
     def Evaluate(self, context):
         int32 = ir.IntType(32)
-        # int1 = ir.IntType(1)
 
         condition = self.children[0].Evaluate(context)
         pred = context.builder.icmp_signed(
             '!=', condition, ir.Constant(int32, 0))
-        # pred = context.builder.trunc(pred, int1, "comptmp")
 
         with context.builder.if_else(pred) as (then, otherwise):
             with then:
                 self.children[1].Evaluate(context)
+
             with otherwise:
-                self.children[2].Evaluate(context)
+                if len(self.children) > 2:
+                    self.children[2].Evaluate(context)
 
 
 class While(Node):

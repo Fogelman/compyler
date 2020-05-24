@@ -2,13 +2,21 @@
 from compyler import _run
 code = """
 
-a fifty-fifty 5
-b fifty-fifty 155
+a fifty-fifty 5111
+print(a)
 
-
+isit(a ==1){
+    print(0)
+}other{
+    b fifty-fifty 5
+    print(b)
+}
 """
 result = _run(code)
 
+
+with open("output.o", "wb") as file:
+    file.write(result)
 
 # def fibbonacci(n):
 #     if(n == 0):
