@@ -30,9 +30,8 @@ class Context(object):
     def declare(self, name):
         """Create an alloca in the entry BB of the current function."""
         int32 = ir.IntType(32)
-        builder = ir.IRBuilder()
-        builder.position_at_start(self.builder.function.entry_basic_block)
-        return builder.alloca(int32, size=None, name=name)
+        # self.builder.position_at_start(self.builder.function.entry_basic_block)
+        return self.builder.alloca(int32, name=name)
 
 
 class UnOp(Node):
