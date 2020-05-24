@@ -10,14 +10,23 @@ __all__ = [
     'lexer', ]
 
 
-def _run(code):
+def _run(code, path=None):
     from compyler.lexer import Lexer
     from compyler.parser import Parser
     from compyler.symboltable import SymbolTable
+    from compyler.assembler import Assembler
 
     lexer = Lexer().get()
     tokens = lexer.lex(code)
     st = SymbolTable()
     parser = Parser().build()
+    ast = parser.parse(tokens)
+    assembler = Assembler()
+    assembler.Evaluate(ast, st)
 
-    return parser.parse(tokens).Evaluate(st)
+    result = assembler.compile_to_object_code()
+    if path is not None:
+        with open(path, "wb") as file:
+            file.write(result)
+
+    return result

@@ -38,12 +38,12 @@
   },
 
   {
-    "code": "hmmm fibbonacci(n) {\nisit(n == 0){\n   return 0\n} other{\n     isit(n == 1) {\n         return 1\n} other {\n         return (fibbonacci(n-1) + fibbonacci(n-2))\n     }\n}}\n c  fifty-fifty fibbonacci(10) \n print(c)",
-    "expect": "55\n",
+    "code": "hmmm fibbonacci(n) {\nisit(n == 0){\n   return 0\n} other{\n     isit(n == 1) {\n         return 1\n} other {\n         return (fibbonacci(n-1) + fibbonacci(n-2))\n }}\nreturn 0\n}\n c  fifty-fifty fibbonacci(35) \n print(c)",
+    "expect": "9227465\n",
     "input": []
   },
   {
-    "code": "hmmm test(){\nprint(1)\n\n}\n\ntest()\n",
+    "code": "hmmm test(){\nprint(1)\nreturn 0\n}\n\ntest()\n",
     "expect": "1\n",
     "input": ""
   }

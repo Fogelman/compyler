@@ -2,6 +2,9 @@ dist: bionic
 language: python
 python: 3.8
 
+compiler:
+  - gcc
+
 git:
   depth: 1
 
