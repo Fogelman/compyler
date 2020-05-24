@@ -26,6 +26,7 @@ class Context(object):
         self.builder = builder
         self.module = module
         self.env = env
+        self.ret = False
 
     def new(self):
         st = SymbolTable(parent=self.st)
@@ -226,6 +227,9 @@ class FuncAssignment(Node):
             context.st.set(arg.name, addr)
 
         body.Evaluate(context)
+
+        if not context.ret:
+            context.builder.ret(ir.Constant(ir.IntType(32), 0))
         return func
 
 
@@ -245,7 +249,7 @@ class FuncCall(Node):
 
 class Return(Node):
     def Evaluate(self, context):
-
+        context.ret = True
         if self.children is None or len(self.children) == 0:
             return context.builder.ret_void()
 

@@ -7,8 +7,6 @@ from ctypes import CFUNCTYPE, c_double
 from enum import Enum
 from compyler.node import Context
 
-# https://gist.github.com/alendit/defe3d518cd8f3f3e28cb46708d4c9d6
-
 
 class Assembler(object):
     def __init__(self):
@@ -62,17 +60,17 @@ class Assembler(object):
         # Create a MCJIT execution engine to JIT-compile the module. Note that
         # ee takes ownership of target_machine, so it has to be recreated a new
         # each time we call create_mcjit_compiler.
-        target_machine = self.target.create_target_machine()
-        with llvm.create_mcjit_compiler(llvmmod, target_machine) as ee:
-            ee.finalize_object()
+        # target_machine = self.target.create_target_machine()
+        # with llvm.create_mcjit_compiler(llvmmod, target_machine) as ee:
+        #     ee.finalize_object()
 
-            if llvmdump:
-                print('======== Machine code')
-                print(target_machine.emit_assembly(llvmmod))
+        #     if llvmdump:
+        #         print('======== Machine code')
+        #         print(target_machine.emit_assembly(llvmmod))
 
-            fptr = CFUNCTYPE(c_double)(ee.get_function_address("main"))
-            result = fptr()
-            return result
+        #     fptr = CFUNCTYPE(c_double)(ee.get_function_address("main"))
+        #     result = fptr()
+        #     return result
 
     def compile_to_object_code(self):
         """Compile previously evaluated code into an object file.

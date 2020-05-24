@@ -26,6 +26,14 @@ The tests can be found in `./tests/tests.json`
 make test
 ```
 
+### Run
+
+```
+python main.py program.x output.o
+gcc output.o -o output
+./output
+```
+
 ### EBNF
 
 The EBNF can be found at `./ebnf.md`

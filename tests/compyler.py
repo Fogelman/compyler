@@ -2,6 +2,7 @@ import os
 import builtins
 import json
 import pytest
+import subprocess
 from compyler import _run
 
 
@@ -25,7 +26,7 @@ def finput(inputs):
 
 
 @pytest.mark.parametrize("code, expect, inputs", tests)
-def test_result(code, expect, inputs, capfd, monkeypatch):
+def test_result(code, expect, inputs, monkeypatch):
     generator = finput(inputs)
     def mock(text=None): return next(generator)
     with monkeypatch.context() as m:
@@ -34,6 +35,16 @@ def test_result(code, expect, inputs, capfd, monkeypatch):
             with pytest.raises(Exception):
                 _run(code)
         else:
-            _run(code)
-            captured = capfd.readouterr()
-            assert captured.out == expect
+            _run(code, "output.o")
+
+            import subprocess
+
+            cmds = [['make', 'compile'], ['./output']]
+            proc = subprocess.Popen(
+                cmds[0], stdout=subprocess.PIPE, cwd=os.getcwd())
+            proc.communicate()[0]
+
+            proc = subprocess.Popen(
+                cmds[1], stdout=subprocess.PIPE, cwd=os.getcwd())
+            output = proc.communicate()[0]
+            assert output == bytes(expect, "utf-8")
