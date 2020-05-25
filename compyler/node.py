@@ -26,7 +26,7 @@ class Context(object):
         self.builder = builder
         self.module = module
         self.env = env
-        self.ret = False
+        self.local = dict()
 
     def new(self):
         st = SymbolTable(parent=self.st)
@@ -133,7 +133,12 @@ class Print(Node):
 
         printf = context.env["printf"]
         ftm = context.env["ftm"]
-        arg = context.builder.bitcast(ftm, int8)
+        if context.local.__contains__("print"):
+            arg = context.local["print"]
+        else:
+            arg = context.builder.bitcast(ftm, int8)
+            context.local["print"] = arg
+
         result = self.children[0].Evaluate(context)
         context.builder.call(printf, [arg, result])
 
@@ -182,9 +187,13 @@ class ReadLine(Node):
 
 class Commands(Node):
 
-    def Evaluate(self, context):
+    def Evaluate(self, context, check=False):
+
         for child in self.children:
             child.Evaluate(context)
+
+        if check and len(self.children) > 0 and isinstance(self.children[-1], (Return)):
+            context.local["ret"] = ""
 
     def append(self, child):
         self.children.append(child)
@@ -226,9 +235,9 @@ class FuncAssignment(Node):
             context.builder.store(arg, addr)
             context.st.set(arg.name, addr)
 
-        body.Evaluate(context)
+        body.Evaluate(context, True)
 
-        if not context.ret:
+        if not context.local.__contains__("ret"):
             context.builder.ret(ir.Constant(ir.IntType(32), 0))
         return func
 
@@ -249,7 +258,6 @@ class FuncCall(Node):
 
 class Return(Node):
     def Evaluate(self, context):
-        context.ret = True
         if self.children is None or len(self.children) == 0:
             return context.builder.ret_void()
 
