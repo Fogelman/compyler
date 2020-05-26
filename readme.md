@@ -2,7 +2,7 @@
 
 A revolutionary language to make your life harder. Implemented with `rply` + `llvmlite`
 
-[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=APS2)](https://travis-ci.com/Fogelman/compyler)
+[![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=APS)](https://travis-ci.com/Fogelman/compyler)
 
 ### Requirements
 
