@@ -1,6 +1,6 @@
 # Getting started
 
-A language for those who think python could be made a little bit more difficult. If you're new here check the [example](/src/examples/#example) section.
+A language for those who think python could be made a little bit more difficult. If you're new here check the [example](./src/examples/#examples) section.
 
 ##  Context
 
