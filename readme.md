@@ -4,6 +4,10 @@ A revolutionary language to make your life harder. Implemented with `rply` + `ll
 
 [![Build Status](https://travis-ci.com/Fogelman/compyler.svg?token=m4KMpTsinBJNfZSW8czm&branch=APS)](https://travis-ci.com/Fogelman/compyler)
 
+### Documentation
+
+All documentation and examples can be found in https://fogelman.github.io/compyler
+
 ### Requirements
 
 ```
