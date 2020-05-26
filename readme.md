@@ -6,7 +6,7 @@ A revolutionary language to make your life harder. Implemented with `rply` + `ll
 
 ### Documentation
 
-All documentation and examples can be found in https://fogelman.github.io/compyler
+All documentation and examples can be found [here](https://fogelman.github.io/compyler)
 
 ### Requirements
 
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 ### Test
 
-The tests can be found in `./tests/tests.json`
+All tests are listed in `./tests/tests.json`
 
 ```
 make test
