@@ -1,18 +1,18 @@
 # Requirements
 
-For building your program in `pseudo-python` make sure to have the requirements described bellow and
+For building your program in `compyler` make sure to have the requirements described bellow.
 
 ```
 python >= 3.x
-pip
 gcc >= 8.3.x
+pip
 ```
-
-and the python libraries listed in `requirements.txt`. They can be quickly be installed with:
+The python libraries are listed in `requirements.txt`. They can be quickly be installed with:
 
     pip install -r requirements.txt
 
-!!! important "Testing only"
+
+!!! important "Test only"
     If you whish to test the current version install the following
     
     ``` 

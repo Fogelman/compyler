@@ -79,5 +79,6 @@ site_url: https://fogelman.github.io/compyler/
 nav:
   - Getting started: index.md
   - Requirements: src/requirements.md
+  - Examples: src/examples.md
   - Grammar:
       - EBNF: src/ebnf.md
