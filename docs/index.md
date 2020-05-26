@@ -2,7 +2,11 @@
 
 A language for those who think python could be made a little bit more difficult. If you're new here check the example below.
 
+
 ## Example
+
+!!! warning 
+    Follow first the [requirements](src/requirements/#requirements) to set up the enviroment.
 
 Lets write some code to calculate Fibonacci sequence.
 
@@ -21,9 +25,7 @@ Lets write some code to calculate Fibonacci sequence.
 
 
 
-!!! important
-
-    Copy the block above and save in `program.x`. Save in the same directory of main.py.
+Copy the block above and save in `program.x`. Save in the same directory of main.py.
 
 
 ### Compile
@@ -31,3 +33,15 @@ Lets write some code to calculate Fibonacci sequence.
 Execute the following command to compile the `program.x` file to `output.o`
 
     python main.py program.x output.o
+
+### Create executable
+
+We can use gcc to transform the `output.o` file to an executable using:
+
+    gcc output.o -o output
+
+### Running
+
+If everything runs smoothly you should have an executable by now. Just run:
+
+    ./output
