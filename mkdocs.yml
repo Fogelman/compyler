@@ -1,0 +1,81 @@
+site_name: Compyler
+site_author: David Fogelman
+
+theme:
+  feature:
+    tabs: true
+  name: "material"
+  palette:
+    primary: "grey"
+    accent: "red"
+  font:
+    text: Roboto
+    code: Roboto Mono
+  custom_dir: overrides
+  language: en
+  features:
+    - instant
+
+  # font: false
+  # features:
+  #   - tabs
+  # palette:
+  #   scheme: slate
+
+# Extras
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/Fogelman
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/davidfogelman
+
+docs_dir: docs
+site_dir: build
+
+extra_css:
+  - css/printing.css
+
+extra_javascript:
+  - js/extra.js
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
+
+markdown_extensions:
+  - markdown.extensions.tables
+  - tables
+  - admonition
+  - codehilite
+  - pymdownx.arithmatex
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+  - pymdownx.tilde
+  - pymdownx.snippets:
+      base_path: code
+      check_paths: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+repo_name: Fogelman/compyler
+repo_url: https://github.com/Fogelman/compyler
+site_url: https://fogelman.github.io/compyler/
+
+nav:
+  - Getting started: index.md
+  - Requirements: src/requirements.md
