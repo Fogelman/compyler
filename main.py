@@ -4,7 +4,7 @@ import re
 from compyler import _run as run
 
 path = sys.argv[1]
-out = sys.argv[2]
+out = "program.asm"
 
 
 pattern = re.compile(r".*?\.php$")
