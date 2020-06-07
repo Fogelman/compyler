@@ -4,11 +4,11 @@ A language for those who think python could be made a little bit more difficult.
 
 ##  Context
 
-This language started due to a subject at <a href="https://www.insper.edu.br/en/" target="_blank">insper</a>.
+This language started due to a subject at <a href="https://www.insper.edu.br/en/" target="_blank">insper</a>. As the day of creation of this language, there aren't many examples or guides on how to use <a href="https://llvmlite.readthedocs.io/en/latest/" target="_blank">llvmlite</a>, a python implementation of the original <a href="https://llvm.org/" target="_blank">llvm</a>. I've tried to make this project organized and with tests to make sure that others interessed can have an easier path in.
 
 ## Motivation
 
-But why build a new language? Let me answer that with: why not? Thats the aproach of the language, throwing some sarcasm around.
+<div style="text-align: justify"> But why build a new language? Let me answer that with: why not? Thats the aproach of the language, throwing some sarcasm around. With so many languages been born and more heated discussions about which is the most efficient and easier to write, I've created a baseline on what is inefficient and hard to write, so everything above should be "OK" to use. </div>
 
 
 ## Compile & Run

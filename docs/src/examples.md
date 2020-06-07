@@ -6,7 +6,7 @@
 
 ## Basic operations
 
-Same as python, but with some restrictions. Check grammar(operations)
+Same as python, but with some restrictions. Check [EBNF](/src/ebnf/).
 
 ```
 a = 1
@@ -15,9 +15,10 @@ b = a + b
 
 ## Print
 
-This one is easy, same as python.
+Although it looks like python, it can only print numbers.
 ```
 print(0)
+print(1+5)
 ```
 
 ## If
