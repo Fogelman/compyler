@@ -8,6 +8,7 @@ tokens = {
     "+": "PLUS",
     "-": "MINUS",
     "/": "DIVIDE",
+    ",": "COMMA",
     "*": "MULTIPLY",
     "(": "OPEN",
     ")": "CLOSE",
@@ -29,7 +30,7 @@ class Tokenizer:
         self.actual = actual
         self._lenght = len(origin)
         self.reserved = re.compile(
-            r"^(\becho)|^(\bwhile)|^(\breturn)|^(\bif)|^(\breadline)|^(\belse)|^(\band)|^(\bor)|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
+            r"^(\becho(?!\w))|^(\bwhile(?!\w))|^(\breturn(?!\w))|^(\bif(?!\w))|^(\breadline(?!\w))|^(\belse(?!\w))|^(\band(?!\w))|^(\bor(?!\w))|^(==)|^(>=)|^(<=)|^(!=)", re.IGNORECASE)
 
         self.boolean = re.compile(r"^(\btrue)|^(\bfalse)", re.IGNORECASE)
 

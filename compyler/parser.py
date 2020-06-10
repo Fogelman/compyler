@@ -38,6 +38,11 @@ class Parser:
         while tokens.actual.type != "CLOSE":
             args.append(Parser.parseRelationalExpression())
 
+            if tokens.actual.type == "COMMA":
+                tokens.selectNext()
+            else:
+                break
+
         if(tokens.actual.type != "CLOSE"):
             raise Exception("[-] unexpected token.")
         tokens.selectNext()

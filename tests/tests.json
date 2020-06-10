@@ -528,5 +528,15 @@
     "code": "<?php\nfunction main($x){\n    if ($x < 1){\n        return 0;\n    }\n    if($x == 1){\n        return 1;\n    }\n    return main($x - 1) + main($x - 2);\n}\n$a = main(10);\necho $a;\n?>",
     "expect": "55\n",
     "input": []
+  },
+  {
+    "code": "<?php\n{\nfunction ifs($x, $y) {\n    if($x<$y){\n        return 1;\n        }\n    return 0;\n    }\necho ifs(1,2);\n}\n?>",
+    "expect": "1\n",
+    "input": []
+  },
+  {
+    "code": "<?php\n{\n    function soma($x, $y) {\n        function echoes($b) {\n            echo $b;\n            }\n        $a = $x + $y;\n        echoes($a);\n        return $a;\n        }\n    $a = 3;\n    $b = soma($a, 4);\n    echo $b;\n    echoes($a);\n    \n}\n?>",
+    "expect": "7\n7\n3\n",
+    "input": []
   }
 ]
